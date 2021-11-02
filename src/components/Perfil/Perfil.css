@@ -1,0 +1,33 @@
+.main-consultas {
+    background-color: #232323;
+    display: block;
+    margin:auto; 
+    text-align: justify;
+ }
+ 
+ .Cuadrado{
+    border: 0px;
+    display: inline-block;
+    width: auto;
+    margin: 0 40px;
+ }
+
+ .Cuadrado2{
+   border: 1px;
+   display: inline-block;
+   width: auto;
+   margin: 0 200px;
+   text-align: justify;
+}
+
+.BotonResultados{
+   border: 1px;
+   display: inline-block;
+   width: auto;
+   margin: 0 40px;
+   text-align: justify;
+}
+
+a:link, a:visited, a:active {
+   text-decoration:none;
+}
