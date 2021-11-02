@@ -241,7 +241,7 @@ export default function Encuesta(props) {
               debito
             );
 
-            getUsuarioUsuario(window.localStorage.getItem("name")).then(
+            getUsuarioCuit(reportes.cuitEmpresa).then(
               (value2) => {
                 value2[0].balanceca =
                   parseFloat(importePagado) + parseFloat(value2[0].balanceca);
