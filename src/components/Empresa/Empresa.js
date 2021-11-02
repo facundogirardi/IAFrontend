@@ -90,7 +90,7 @@ export default function Encuesta(props) {
   const [codigoPago, setCodigoPago] = React.useState("");
   const [cuitEmpresa, setCuitEmpresa] = React.useState("");
   const [importe, setImporte] = React.useState("");
-  const [cuit, setCuit] = React.useState("");
+  const [cuit, setCuit] = React.useState("-");
   const [descripcion, setDescripcion] = React.useState("");
   const [vencimiento, setVencimiento] = React.useState("");
   const [debito, setDebito] = React.useState("");
@@ -144,9 +144,10 @@ export default function Encuesta(props) {
       !isEmpty(cuitEmpresa) &&
       !isEmpty(importe) &&
       !isEmpty(descripcion) &&
-      !isEmpty(vencimiento) &&
-      !isEmpty(debito)
+      !isEmpty(vencimiento)
     ) {
+      var vDebito = 0;
+      if (cuit!=="-") {vDebito = 1} 
       archivoDatos = await altaEmpresa(
         nombre,
         codigoPago,
@@ -156,7 +157,7 @@ export default function Encuesta(props) {
         vencimiento,
         estado,
         cuit,
-        debito
+        vDebito
       );
     } else {
       swal(
@@ -279,33 +280,15 @@ export default function Encuesta(props) {
                   className={clase5.number}
                 />{" "}
                      <br></br>
-                <TextField
+                     <TextField
                   id="Cuit"
-                  label="Cuit"
+                  label="CUIT-Débito Automático"
                   type="number"
                   inputProps={{
                     onChange: (event) => handleCuit(event),
                   }}
                   className={clase5.number}
                 />{" "}
-
-                <FormControl>
-                  <InputLabel id="demo-simple-select-label">
-                    Debito Automatico
-                  </InputLabel>
-                  <Select
-                    style={{ width: "159px" }}
-                    labelId="Debito"
-                    id="Debito"
-                    label="Debito"
-                    inputProps={{
-                      onChange: (event) => handleDebito(event),
-                    }}
-                  >
-                    <MenuItem value={"1"}>Si</MenuItem>
-                    <MenuItem value={"0"}>No</MenuItem>
-                  </Select>
-                </FormControl>
                 <br></br>
                 <TextField
                   required
