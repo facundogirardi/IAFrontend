@@ -14,6 +14,8 @@
     "github-markdown-css": "4.x",
     "intl": "1.x",
     "intl-locales-supported": "1.x",
+    "jest": "^24.9.0",
+    "jest-haste-map": "^27.3.1",
     "material-table": "^1.69.1",
     "material-ui-shell": "1.x",
     "mongodb": "^4.1.2",
