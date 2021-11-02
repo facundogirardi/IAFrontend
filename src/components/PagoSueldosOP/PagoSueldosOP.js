@@ -156,14 +156,13 @@ export default function Encuesta(props) {
         setUsuarioclave(usuarioclave[0]);
 
         const usuarioB = await getUsuarioCBU(reportes[step].cbu);
-         const usuarioA = await getUsuarioCBU(usuarioclave.cbu);
+        const usuarioA = await getUsuarioCBU(usuarioclave.cbu);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
-
           reportes[step].pagado = "1";
 
           updateSueldo(reportes[step]);
-          
+
           usuarioA[0].balanceca =
             parseFloat(usuarioA[0].balanceca) -
             parseFloat(reportes[step].importe);
@@ -265,7 +264,7 @@ export default function Encuesta(props) {
           <Paper className={clase5.paper}>
             <h2>BAIRES BANK | OPERADOR</h2>
           </Paper>
-          <br /> <br />
+
           <Grid item xs={12} sm={12} style={{ marginTop: "30px" }}>
             <center>
               {" "}
@@ -275,8 +274,6 @@ export default function Encuesta(props) {
                 aria-label="text primary button group"
                 size="large"
               >
-       
-
                 <Link to={{ pathname: "/Extracciones" }}>
                   {" "}
                   <Button color="primary">EXTRACCIONES</Button>{" "}
@@ -292,19 +289,18 @@ export default function Encuesta(props) {
                 <Link to={{ pathname: "/Pagos" }}>
                   {" "}
                   <Button color="primary">PAGO DE SERVICIOS</Button>
-                </Link>
-           
-                  {" "}
-                  <Button variant="outlined" color="primary">PAGO DE SUELDOS</Button>
-      
+                </Link>{" "}
+                <Button variant="outlined" color="primary">
+                  PAGO DE SUELDOS
+                </Button>
                 <Link to={{ pathname: "/Administracion" }}>
                   {" "}
                   <Button color="primary">ADMINISTRACION</Button>
                 </Link>
-
-                <Button  color="primary">
-                  EMPRESA
-                </Button>
+                <Link to={{ pathname: "/Empresa" }}>
+                  {" "}
+                  <Button color="primary">ALTA DE CUPON</Button>
+                </Link>
               </ButtonGroup>{" "}
             </center>
           </Grid>

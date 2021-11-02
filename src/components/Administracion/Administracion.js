@@ -344,7 +344,7 @@ export default function Encuesta(props) {
                 </Button>
                 <Link to={{ pathname: "/Empresa" }}>
                   {" "}
-                  <Button color="primary">EMPRESA</Button>
+                  <Button color="primary">ALTA DE CUPON</Button>
                 </Link>
               </ButtonGroup>
             </center>
@@ -381,7 +381,7 @@ export default function Encuesta(props) {
                 <br />
                 <br />
                 <Button variant="contained" color="Primary" onClick={Clearing}>
-                  EFECTUAR CLEARING BANCARIO
+                  EFECTUAR CLEARING BANCARIO (En construccion)
                 </Button>
                 <br />
                 <br />

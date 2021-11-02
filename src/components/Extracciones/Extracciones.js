@@ -274,7 +274,7 @@ export default function Encuesta(props) {
                 </Link>
                 <Link to={{ pathname: "/Empresa" }}>
                   {" "}
-                  <Button color="primary">EMPRESA</Button>
+                  <Button color="primary">ALTA DE CUPON</Button>
                 </Link>
               </ButtonGroup>
             </center>{" "}

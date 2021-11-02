@@ -226,7 +226,7 @@ export default function Encuesta(props) {
                 </Link>
 
                 <Button variant="outlined" color="primary">
-                  EMPRESA
+                ALTA DE CUPON
                 </Button>
               </ButtonGroup>
             </center>
@@ -235,7 +235,7 @@ export default function Encuesta(props) {
         <div className="App">
           <Grid item xs={12} sm={12} style={{ marginTop: "70px" }}>
             <center>
-              <h3 className={clase5.paper}>EMPRESA</h3>
+              <h3 className={clase5.paper}>ALTA DE CUPON</h3>
               ALTA CUPÓN
               <br />
               <form autoComplete="off">
