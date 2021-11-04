@@ -251,7 +251,7 @@ export default function Encuesta(props) {
                 updateUsuario(value2[0]).then((value) => {});
                 GeneroMovimiento(
                   value2[0].usuario,
-                  tipomovimiento + estadoPago + "-" + cuit,
+                  tipomovimiento + estadoPago + "-" + codigopago,
                   importe,
                   importeCA,
                   importeCC
