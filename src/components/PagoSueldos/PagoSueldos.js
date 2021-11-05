@@ -149,10 +149,10 @@ export default function Encuesta(props) {
         const usuarioclave = await getUsuarioUsuario(
           window.localStorage.getItem("name")
         );
-        setUsuarioclave(usuarioclave[0]);
-
+        
+        console.log(reportes[step].cbu, usuarioclave[0].cbu)
         const usuarioB = await getUsuarioCBU(reportes[step].cbu);
-         const usuarioA = await getUsuarioCBU(usuarioclave.cbu);
+         const usuarioA = await getUsuarioCBU(usuarioclave[0].cbu);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
 
