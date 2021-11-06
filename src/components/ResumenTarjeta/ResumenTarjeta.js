@@ -96,8 +96,7 @@ var filtered = tarjetas.filter(item => {
   }});
 
   const columnas = [
-    { title: "Código", field: "codigotransaccion", filtering: false },
-    { title: "Importe", field: "importe", filtering: false },
+    { title: "Importe", field: "importe", filtering: false , type: 'currency', align: 'left'},
     { title: "Vencimiento", field: "fechaVencimiento", filtering: false },
     { title: "Descripción", field: "descripcion", filtering: false },
   ];
