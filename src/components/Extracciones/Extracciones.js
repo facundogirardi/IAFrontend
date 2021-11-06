@@ -19,7 +19,7 @@ import {
   GeneroMovimiento,
   getUsuarioCBU,
   getUsuarioCBUCC,
-  getMantenimientoClave
+  getMantenimientoClave,
 } from "../../controller/miApp.controller";
 
 const useStylesGrid = makeStyles((theme) => ({
@@ -52,8 +52,9 @@ const useStylesGrid = makeStyles((theme) => ({
   number: {
     "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
       "-webkit-appearance": "none",
-      margin: 0
-    }}
+      margin: 0,
+    },
+  },
 }));
 
 const useStyles = makeStyles((theme) => ({
@@ -79,7 +80,6 @@ export default function Encuesta(props) {
   const [descubiertoF, setDescubiertoF] = useState([]);
   const [descubiertoJ, setDescubiertoJ] = useState([]);
 
-
   const handleValor = (event) => {
     setValor(event.target.value);
   };
@@ -90,35 +90,59 @@ export default function Encuesta(props) {
   const numerico = parseFloat(valor);
   var descubierto = 0;
 
-  
-
-
   const validarLogin = async function () {
-
     const reportes1 = await getMantenimientoClave("1");
     setReportes1(reportes1[0]);
     getUsuarioCBU(origen).then((value) => {
-
-      if(value!==201){
-
-        if(value[0].usuariotipo === 1){
-         descubierto=reportes1[0].descubiertoF;
-        }else{
-          descubierto=reportes1[0].descubiertoJ;
+      if (value !== 201) {
+        if (value[0].usuariotipo === 1) {
+          descubierto = reportes1[0].descubiertoF;
+        } else {
+          descubierto = reportes1[0].descubiertoJ;
         }
 
-      if (numerico < 1) {
-        swal(" ", "NO SE PUEDE EXTRAER UN MONTO MENOR A $ 1", "error");
-      } else if (parseFloat(value[0].balanceca) - numerico < 0) {
-        if (parseFloat(value[0].balancecc) - numerico < -descubierto) {
-          swal(" ", "NO SE PUEDE EXTRAER, USTED SUPERA EL DESCUBIERTO DE $ " + descubierto +" PERMITIDO", "error");
-        } else { 
-          const aux = parseFloat(value[0].balanceca) - numerico;
-          value[0].balanceca = parseFloat(value[0].balanceca) + parseFloat(aux);
-          if (aux<0){value[0].balanceca=0}
-          const auxdos = -aux;
-          value[0].balancecc = parseFloat(value[0].balancecc) - parseFloat(auxdos);
-          const importe = -auxdos;
+        if (numerico < 1) {
+          swal(" ", "NO SE PUEDE EXTRAER UN MONTO MENOR A $ 1", "error");
+        } else if (parseFloat(value[0].balanceca) - numerico < 0) {
+          if (parseFloat(value[0].balancecc) - numerico < -descubierto) {
+            swal(
+              " ",
+              "NO SE PUEDE EXTRAER, USTED SUPERA EL DESCUBIERTO DE $ " +
+                descubierto +
+                " PERMITIDO",
+              "error"
+            );
+          } else {
+            const aux = parseFloat(value[0].balanceca) - numerico;
+            value[0].balanceca =
+              parseFloat(value[0].balanceca) + parseFloat(aux);
+            if (aux < 0) {
+              value[0].balanceca = 0;
+            }
+            const auxdos = -aux;
+            value[0].balancecc =
+              parseFloat(value[0].balancecc) - parseFloat(auxdos);
+            const importe = -auxdos;
+            const usuario = value[0].usuario;
+            const importeCA = value[0].balanceca;
+            const importeCC = value[0].balancecc;
+            updateUsuario(value[0]).then((value) => {
+              GeneroMovimiento(
+                usuario,
+                tipomovimiento,
+                importe,
+                importeCA,
+                importeCC
+              );
+              swal(" ", "MONTO EXTRAÍDO CORRECTAMENTE", "success");
+              setTimeout(() => {
+                window.location.reload(true);
+              }, 1300);
+            });
+          }
+        } else {
+          value[0].balanceca = parseFloat(value[0].balanceca) - numerico;
+          const importe = -numerico;
           const usuario = value[0].usuario;
           const importeCA = value[0].balanceca;
           const importeCC = value[0].balancecc;
@@ -135,76 +159,50 @@ export default function Encuesta(props) {
               window.location.reload(true);
             }, 1300);
           });
-      }
-      } else { 
-        value[0].balanceca = parseFloat(value[0].balanceca) - numerico;
-        const importe = -numerico;
-        const usuario = value[0].usuario;
-        const importeCA = value[0].balanceca;
-        const importeCC = value[0].balancecc;
-        updateUsuario(value[0]).then((value) => {
-          GeneroMovimiento(
-            usuario,
-            tipomovimiento,
-            importe,
-            importeCA,
-            importeCC
-          );
-          swal(" ", "MONTO EXTRAÍDO CORRECTAMENTE", "success");
-          setTimeout(() => {
-            window.location.reload(true);
-          }, 1300);
-        });
- }
-   } else{ 
-     
-    
-    
-    getUsuarioCBUCC(origen).then((value) => {
+        }
+      } else {
+        getUsuarioCBUCC(origen).then((value) => {
+          if (value !== 201) {
+            if (value[0].usuariotipo === 1) {
+              descubierto = reportes1[0].descubiertoF;
+            } else {
+              descubierto = reportes1[0].descubiertoJ;
+            }
 
-      if(value[0].usuariotipo === 1){
-        descubierto=reportes1[0].descubiertoF;
-       }else{
-         descubierto=reportes1[0].descubiertoJ;
-       }
-
-      if(value!==201){
-        if (value[0].balancecc - numerico < -descubierto) {
-          swal(" ", "NO SE PUEDE EXTRAER, USTED SUPERA EL DESCUBIERTO DE $ "+ descubierto +" PERMITIDO", "error");
-        } else { 
-          value[0].balancecc = parseFloat(value[0].balancecc) - numerico;
-        const importe = -numerico;
-        const usuario = value[0].usuario;
-        const importeCA = value[0].balanceca;
-        const importeCC = value[0].balancecc;
-        updateUsuario(value[0]).then((value) => {
-          GeneroMovimiento(
-            usuario,
-            tipomovimiento,
-            importe,
-            importeCA,
-            importeCC
-          );
-          swal(" ", "MONTO EXTRAÍDO CORRECTAMENTE", "success");
-          setTimeout(() => {
-            window.location.reload(true);
-          }, 1300);
+            if (value[0].balancecc - numerico < descubierto) {
+              swal(
+                " ",
+                "NO SE PUEDE EXTRAER, USTED SUPERA EL DESCUBIERTO DE $ " +
+                  descubierto +
+                  " PERMITIDO",
+                "error"
+              );
+            } else {
+              value[0].balancecc = parseFloat(value[0].balancecc) - numerico;
+              const importe = -numerico;
+              const usuario = value[0].usuario;
+              const importeCA = value[0].balanceca;
+              const importeCC = value[0].balancecc;
+              updateUsuario(value[0]).then((value) => {
+                GeneroMovimiento(
+                  usuario,
+                  tipomovimiento,
+                  importe,
+                  importeCA,
+                  importeCC
+                );
+                swal(" ", "MONTO EXTRAÍDO CORRECTAMENTE", "success");
+                setTimeout(() => {
+                  window.location.reload(true);
+                }, 1300);
+              });
+            }
+          } else {
+            swal(" ", "NO SE PUDO EXTRAER, USUARIO INEXISTENTE", "error");
+          }
         });
       }
-   
-   } else{ 
-     
-    
-    
-    swal(" ", "NO SE PUDO EXTRAER, USUARIO INEXISTENTE", "error");
-  
-  
-  
-  } });
-  
-  
-  
-  } });
+    });
   };
 
   const BuscoUsuario = () => {
@@ -215,21 +213,21 @@ export default function Encuesta(props) {
     }
   };
 
-
   useEffect(() => {
     getReporte(props.match.params.id);
   }, [props.match.params.id]);
-  
+
   const getReporte = async (id) => {
-    if (window.localStorage.getItem('name')!==''){
-    const reportes = await getUsuarioUsuario(window.localStorage.getItem('name'));
-    setReportes(reportes[0]);}else{
+    if (window.localStorage.getItem("name") !== "") {
+      const reportes = await getUsuarioUsuario(
+        window.localStorage.getItem("name")
+      );
+      setReportes(reportes[0]);
+    } else {
       history.push({
-        pathname:
-          "/IngresoOP"
+        pathname: "/IngresoOP",
       });
     }
-  
   };
 
   const history = useHistory();
@@ -251,8 +249,6 @@ export default function Encuesta(props) {
                 aria-label="text primary button group"
                 size="large"
               >
-       
-
                 <Button variant="outlined" color="primary">
                   EXTRACCIONES
                 </Button>
@@ -278,8 +274,6 @@ export default function Encuesta(props) {
                 </Link>
               </ButtonGroup>
             </center>{" "}
-         
-          
           </Grid>
         </Grid>
         <div className="App">
@@ -292,7 +286,6 @@ export default function Encuesta(props) {
                   required
                   id="Origen"
                   label="Origen"
- 
                   inputProps={{
                     onChange: (event) => handleOrigen(event),
                   }}

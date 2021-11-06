@@ -146,20 +146,13 @@ export default function Encuesta(props) {
 
     for (let step = 0; step < cantidad; step++) {
       if (reportes[step].pagado == "0") {
-        const usuarioclave = await getUsuarioUsuario(
-          window.localStorage.getItem("name")
-        );
-        
-        console.log(reportes[step].cbu, usuarioclave[0].cbu)
         const usuarioB = await getUsuarioCBU(reportes[step].cbu);
-         const usuarioA = await getUsuarioCBU(usuarioclave[0].cbu);
+        const usuarioA = await getUsuarioCBU(reportes[step].cbuEmpresa);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
-
           reportes[step].pagado = "1";
 
           updateSueldo(reportes[step]);
-          
           usuarioA[0].balanceca =
             parseFloat(usuarioA[0].balanceca) -
             parseFloat(reportes[step].importe);
