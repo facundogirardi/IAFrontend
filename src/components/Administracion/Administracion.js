@@ -171,12 +171,12 @@ export default function Encuesta(props) {
             parseFloat(reportes[step].importe);
 
           const importeM = -reportes[step].importe;
-          const usuarioM = usuarioA[0].usuario;
-          const importeCAM = usuarioA[0].balanceca;
+          const usuarioM = usuarioB[0].usuario;
+          const importeCAM = usuarioB[0].balanceca;
 
           const tipomovimientoM =
             "Pago de Tarjetas a Comercios - " + reportes[step].descripcion;
-          const importeCCM = usuarioA[0].balancecc;
+          const importeCCM = usuarioB[0].balancecc;
           GeneroMovimiento(
             usuarioM,
             tipomovimientoM,
@@ -197,7 +197,7 @@ export default function Encuesta(props) {
           const importeCAM1 = usuarioA[0].balanceca;
 
           const tipomovimientoM1 =
-            "Pago de sueldos - " + reportes[step].descripcion;
+            "Pago a comercios - " + reportes[step].descripcion;
           const importeCCM1 = usuarioA[0].balancecc;
           GeneroMovimiento(
             usuarioM1,
