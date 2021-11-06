@@ -159,8 +159,8 @@ export default function Encuesta(props) {
 
     for (let step = 0; step < cantidad; step++) {
       if (reportes[step].pagado === "0") {
-        const usuarioB = await getUsuarioCuit(reportes[step].cuit);
-        const usuarioA = await getUsuarioCuit(reportes[step].cuitEmpresa);
+        const usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
+        const usuarioA = await getUsuarioCuit(reportes[step].cuit);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
           reportes[step].pagado = "1";
