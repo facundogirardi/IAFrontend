@@ -23,11 +23,10 @@ import {
   updateEmpresa,
   getUsuarioCuit,
   getComercios,
-  updateComercio
+  updateComercio,
+  updateClearing
 } from "../../controller/miApp.controller";
-
-//importo Externo
-import { postLiquidacionesExterno } from "../../controller/miAppExterno.controller";
+import { getClearings } from "../../controller/miAppExterno.controller";
 
 const useStylesGrid = makeStyles((theme) => ({
   root: {
@@ -80,7 +79,6 @@ export default function Encuesta(props) {
   const Sueldo = () => {
     validarSueldo();
   };
-
 
   //Ejecuto el endopoint para validar el CBU & guardar el monto
   const validarSueldo = async function () {
@@ -149,7 +147,6 @@ export default function Encuesta(props) {
   const PagoTarjetaComercio = () => {
     validarPagoTarjetaComercio();
   };
-
 
   //Ejecuto el endopoint para validar el CBU & guardar el monto
   const validarPagoTarjetaComercio = async function () {
@@ -293,8 +290,66 @@ export default function Encuesta(props) {
   };
 
   const validarClearing = async function () {
-    var cuit = "123456";
-    postLiquidacionesExterno(cuit);
+    const reportes = await getClearings();
+
+    const cantidad = reportes.length;
+
+    for (let step = 0; step < cantidad; step++) {
+      if (reportes[step].pagado == "0") {
+        const usuarioB = await getUsuarioCBU(reportes[step].cbuUsuarioD);
+        const usuarioA = await getUsuarioCBU(reportes[step].cbuUsuarioO);
+
+        if (usuarioB !== 201 && usuarioA !== 201) {
+          reportes[step].pagado = "1";
+
+          updateClearing(reportes[step]);
+          usuarioA[0].balanceca =
+            parseFloat(usuarioA[0].balanceca) -
+            parseFloat(reportes[step].importe);
+
+          const importeM = -reportes[step].importe;
+          const usuarioM = usuarioA[0].usuario;
+          const importeCAM = usuarioA[0].balanceca;
+
+          const tipomovimientoM =
+            "Transferencia Externa - " + reportes[step].descripcion;
+          const importeCCM = usuarioA[0].balancecc;
+          GeneroMovimiento(
+            usuarioM,
+            tipomovimientoM,
+            importeM,
+            importeCAM,
+            importeCCM
+          );
+          updateUsuario(usuarioA[0]);
+
+          // Grabo usuario
+
+          usuarioB[0].balanceca =
+            parseFloat(usuarioB[0].balanceca) +
+            parseFloat(reportes[step].importe);
+
+          const importeM1 = +reportes[step].importe;
+          const usuarioM1 = usuarioB[0].usuario;
+          const importeCAM1 = usuarioB[0].balanceca;
+
+          const tipomovimientoM1 =
+            "Trasnferencia Externa - " + reportes[step].descripcion;
+          const importeCCM1 = usuarioB[0].balancecc;
+          GeneroMovimiento(
+            usuarioM1,
+            tipomovimientoM1,
+            importeM1,
+            importeCAM1,
+            importeCCM1
+          );
+          updateUsuario(usuarioB[0]);
+        }
+      } else {
+        console.log("Hay errores en algunos campos");
+      }
+    }
+    swal(" ", "Sueldos pagados", "success");
   };
 
   const history = useHistory();
@@ -317,8 +372,6 @@ export default function Encuesta(props) {
                 aria-label="text primary button group"
                 size="large"
               >
-     
-
                 <Link to={{ pathname: "/Extracciones" }}>
                   {" "}
                   <Button color="primary">EXTRACCIONES</Button>{" "}
@@ -381,11 +434,15 @@ export default function Encuesta(props) {
                 <br />
                 <br />
                 <Button variant="contained" color="Primary" onClick={Clearing}>
-                  EFECTUAR CLEARING BANCARIO (En construccion)
+                  EFECTUAR CLEARING BANCARIO
                 </Button>
                 <br />
                 <br />
-                <Button variant="contained" color="Primary" onClick={PagoTarjetaComercio}>
+                <Button
+                  variant="contained"
+                  color="Primary"
+                  onClick={PagoTarjetaComercio}
+                >
                   EFECTUAR PAGO DE TARJETAS A COMERCIOS
                 </Button>
               </form>

@@ -1,7 +1,7 @@
 import Scrollbar from "material-ui-shell/lib/components/Scrollbar/Scrollbar";
 import Page from "material-ui-shell/lib/containers/Page/Page";
 import "./Transferir.css";
-import React, {  useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
@@ -21,8 +21,12 @@ import {
   getUsuarioCBU,
   GeneroMovimiento,
   getUsuarioCBUCC,
-  getMantenimientoClave
+  getMantenimientoClave,
 } from "../../controller/miApp.controller";
+import {
+  altaclearing,
+  getUsuarioCBUExterno,
+} from "../../controller/miAppExterno.controller";
 
 const useStylesGrid = makeStyles((theme) => ({
   root: {
@@ -54,8 +58,9 @@ const useStylesGrid = makeStyles((theme) => ({
   number: {
     "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button": {
       "-webkit-appearance": "none",
-      margin: 0
-    }}
+      margin: 0,
+    },
+  },
 }));
 
 const useStyles = makeStyles((theme) => ({
@@ -88,62 +93,66 @@ export default function Encuesta(props) {
   };
   const numerico = parseFloat(valor);
   var descubierto = 0;
-const handleOrigen = (event) => {
+  const handleOrigen = (event) => {
     setOrigen(event.target.value);
   };
   //Ejecuto el endopoint para validar el CBU & guardar el monto
   const validarLogin = async function () {
-
     const reportes1 = await getMantenimientoClave("1");
-        setReportes1(reportes1[0]);
+    setReportes1(reportes1[0]);
 
-    getUsuarioUsuario(window.localStorage.getItem('name')).then((value) => {
-//
-
-if(value[0].usuariotipo === 1){
-  descubierto=reportes1[0].descubiertoF;
- }else{
-   descubierto=reportes1[0].descubiertoJ;
- }
-
-if (origen==="CA"){
-      if (numerico < 1) {
-        swal(" ", "NO SE PUEDE TRANSFERIR UN MONTO MENOR A $ 1", "error");
-      } else if ((value[0].balanceca = parseFloat(value[0].balanceca) - numerico) < 0) {
-        swal(" ", "NO SE PUEDE TRANSFERIR, USTED SUPERA EL MONTO DISPONIBLE", "error");
+    getUsuarioUsuario(window.localStorage.getItem("name")).then((value) => {
+      if (value[0].usuariotipo === 1) {
+        descubierto = reportes1[0].descubiertoF;
       } else {
-        const importe = -numerico;
-        const usuario = value[0].usuario;
-        const importeCA = value[0].balanceca;
-        const importeCC = value[0].balancecc;
-        updateUsuario(value[0]).then((value) => {
-          GeneroMovimiento(
-            usuario,
-            tipomovimiento,
-            importe,
-            importeCA,
-            importeCC
+        descubierto = reportes1[0].descubiertoJ;
+      }
+
+      if (origen === "CA") {
+        if (numerico < 1) {
+          swal(" ", "NO SE PUEDE TRANSFERIR UN MONTO MENOR A $ 1", "error");
+        } else if (parseFloat(value[0].balanceca) - numerico < 0) {
+          swal(
+            " ",
+            "NO SE PUEDE TRANSFERIR, USTED SUPERA EL MONTO DISPONIBLE",
+            "error"
           );
-          getUsuarioCBU(destino).then((value) => {
-            if (value !== 201) {
+        } else {
+          getUsuarioCBU(destino).then((valueU) => {
+            if (valueU !== 201) {
               const numerico = parseFloat(valor);
-              value[0].balanceca = numerico + parseFloat(value[0].balanceca);
-              const importeCA = value[0].balanceca;
-              const importeCC = value[0].balancecc;
-              updateUsuario(value[0]).then((value) => {});
+              valueU[0].balanceca = numerico + parseFloat(valueU[0].balanceca);
+              const importeCA = valueU[0].balanceca;
+              const importeCC = valueU[0].balancecc;
+              updateUsuario(valueU[0]).then((value) => {});
               GeneroMovimiento(
-                value[0].usuario,
+                valueU[0].usuario,
                 tipomovimiento,
                 numerico,
                 importeCA,
                 importeCC
               );
-            } else{
+              value[0].balanceca = parseFloat(value[0].balanceca) - numerico;
+              updateUsuario(value[0]).then((value) => {});
+              const importe = -numerico;
+              const usuario = value[0].usuario;
+              const importeCAB = value[0].balanceca;
+              const importeCCB = value[0].balancecc;
 
+              GeneroMovimiento(
+                usuario,
+                tipomovimiento,
+                importe,
+                importeCAB,
+                importeCCB
+              );
+              swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
+            } else {
               getUsuarioCBUCC(destino).then((value) => {
                 if (value !== 201) {
                   const numerico = parseFloat(valor);
-                  value[0].balancecc = numerico + parseFloat(value[0].balancecc);
+                  value[0].balancecc =
+                    numerico + parseFloat(value[0].balancecc);
                   const importeCA = value[0].balanceca;
                   const importeCC = value[0].balancecc;
                   updateUsuario(value[0]).then((value) => {});
@@ -154,58 +163,103 @@ if (origen==="CA"){
                     importeCA,
                     importeCC
                   );
+                  swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
+                } else {
+                  getUsuarioCBUExterno(destino).then((valueE) => {
+                    if (valueE !== 201) {
+                      const numerico = parseFloat(valor);
+                      valueE[0].balancecc =
+                        numerico + parseFloat(valueE[0].balancecc);
+                      const importeCA = valueE[0].balanceca;
+                      const importeCC = valueE[0].balancecc;
+                      updateUsuario(valueE[0]).then((valueE) => {});
+                      GeneroMovimiento(
+                        valueE[0].usuario,
+                        tipomovimiento,
+                        numerico,
+                        importeCA,
+                        importeCC
+                      );
+                      const cbuPropio = "946677575890325000000";
+                      const cbuUsuarioO = value[0].cbu;
+                      const cbuUsuarioD = destino;
+                      const importe = numerico;
+                      const descripcion =
+                        "Transferencia externa : " + value[0].usuario;
+                      const pagado = 0;
+                      altaclearing(
+                        cbuPropio,
+                        cbuUsuarioO,
+                        cbuUsuarioD,
+                        importe,
+                        descripcion,
+                        pagado
+                      );
+                      swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
+                    } else {
+                      swal(" ", "USUARIO INEXISTENTE", "error");
+                    }
+                  });
                 }
               });
-
             }
           });
-          swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
 
           setTimeout(() => {
             history.push({
               pathname: "/HomeCA", //paso el usuario temporalmente
             });
           }, 1000);
-        });
-      }
-       } else {
-      if (numerico < 1) {
-        swal(" ", "NO SE PUEDE TRANSFERIR UN MONTO MENOR A $ 1", "error");
-      } else if ((value[0].balancecc = value[0].balancecc - numerico) < -descubierto) {
-        swal(" ", "NO SE PUEDE TRANSFERIR, USTED SUPERA EL MONTO DISPONIBLE", "error");
+        }
       } else {
-        const importe = -numerico;
-        const usuario = value[0].usuario;
-        const importeCA = value[0].balanceca;
-        const importeCC = value[0].balancecc;
-        updateUsuario(value[0]).then((value) => {
-          GeneroMovimiento(
-            usuario,
-            tipomovimiento,
-            importe,
-            importeCA,
-            importeCC
+        if (numerico < 1) {
+          swal(" ", "NO SE PUEDE TRANSFERIR UN MONTO MENOR A $ 1", "error");
+        } else if (
+          parseFloat(value[0].balancecc) - parseFloat(numerico) <
+          parseFloat(descubierto)
+        ) {
+          swal(
+            " ",
+            "NO SE PUEDE TRANSFERIR, USTED SUPERA EL MONTO DISPONIBLE",
+            "error"
           );
-          getUsuarioCBU(destino).then((value) => {
-            if (value !== 201) {
+        } else {
+          getUsuarioCBU(destino).then((valueU) => {
+            if (valueU !== 201) {
               const numerico = parseFloat(valor);
-              value[0].balanceca = numerico + parseFloat(value[0].balanceca);
-              const importeCA = value[0].balanceca;
-              const importeCC = value[0].balancecc;
-              updateUsuario(value[0]).then((value) => {});
+              valueU[0].balancecc = numerico + parseFloat(valueU[0].balancecc);
+              const importeCA = valueU[0].balanceca;
+              const importeCC = valueU[0].balancecc;
+              updateUsuario(valueU[0]).then((value) => {});
               GeneroMovimiento(
-                value[0].usuario,
+                valueU[0].usuario,
                 tipomovimiento,
                 numerico,
                 importeCA,
                 importeCC
               );
-            } else{
+              value[0].balancecc =
+                parseFloat(value[0].balancecc) - parseFloat(numerico);
+              updateUsuario(value[0]).then((value) => {});
+              const importe = -numerico;
+              const usuario = value[0].usuario;
+              const importeCAB = value[0].balanceca;
+              const importeCCB = value[0].balancecc;
 
+              GeneroMovimiento(
+                usuario,
+                tipomovimiento,
+                importe,
+                importeCAB,
+                importeCCB
+              );
+              swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
+            } else {
               getUsuarioCBUCC(destino).then((value) => {
                 if (value !== 201) {
                   const numerico = parseFloat(valor);
-                  value[0].balancecc = numerico + parseFloat(value[0].balancecc);
+                  value[0].balancecc =
+                    numerico + parseFloat(value[0].balancecc);
                   const importeCA = value[0].balanceca;
                   const importeCC = value[0].balancecc;
                   updateUsuario(value[0]).then((value) => {});
@@ -216,21 +270,56 @@ if (origen==="CA"){
                     importeCA,
                     importeCC
                   );
+                  swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
+                } else {
+                  getUsuarioCBUExterno(destino).then((valueE) => {
+                    if (valueE !== 201) {
+                      const numerico = parseFloat(valor);
+                      valueE[0].balancecc =
+                        numerico + parseFloat(valueE[0].balancecc);
+                      const importeCA = valueE[0].balanceca;
+                      const importeCC = valueE[0].balancecc;
+                      updateUsuario(valueE[0]).then((valueE) => {});
+                      GeneroMovimiento(
+                        valueE[0].usuario,
+                        tipomovimiento,
+                        numerico,
+                        importeCA,
+                        importeCC
+                      );
+                      const cbuPropio = "946677575890325000000";
+                      const cbuUsuarioO = value[0].cbu;
+                      const cbuUsuarioD = destino;
+                      const importe = numerico;
+                      const descripcion =
+                        "Transferencia externa : " + value[0].usuario;
+                      const pagado = 0;
+                      altaclearing(
+                        cbuPropio,
+                        cbuUsuarioO,
+                        cbuUsuarioD,
+                        importe,
+                        descripcion,
+                        pagado
+                      );
+                      swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
+                    } else {
+                      swal(" ", "USUARIO INEXISTENTE", "error");
+                    }
+                  });
                 }
               });
-
             }
           });
-          swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
 
           setTimeout(() => {
             history.push({
               pathname: "/HomeCA", //paso el usuario temporalmente
             });
           }, 1000);
-        });
+        }
       }
-    } });
+    });
     //
   };
 
@@ -247,15 +336,16 @@ if (origen==="CA"){
   }, [props.match.params.id]);
 
   const getReporte = async (id) => {
-    if (window.localStorage.getItem('name')!==''){
-    const reportes = await getUsuarioUsuario(window.localStorage.getItem('name'));
-    setReportes(reportes[0]);}else{
+    if (window.localStorage.getItem("name") !== "") {
+      const reportes = await getUsuarioUsuario(
+        window.localStorage.getItem("name")
+      );
+      setReportes(reportes[0]);
+    } else {
       history.push({
-        pathname:
-          "/IngresoCA"
+        pathname: "/IngresoCA",
       });
     }
-  
   };
 
   const history = useHistory();
@@ -278,7 +368,7 @@ if (origen==="CA"){
               <h3 className={clase5.paper}>TRANSFERENCIAS</h3>
 
               <form autoComplete="off">
-              <FormControl>
+                <FormControl>
                   <InputLabel id="demo-simple-select-label">Origen</InputLabel>
                   <Select
                     style={{ width: "190px" }}
@@ -287,14 +377,11 @@ if (origen==="CA"){
                     label="Origen"
                     onChange={handleOrigen}
                   >
-                    <MenuItem value={"CA"}>
-                      Caja de Ahorro
-                    </MenuItem>
-                    <MenuItem value={"CTACTE"}>
-                      Cuenta Corriente
-                    </MenuItem>
+                    <MenuItem value={"CA"}>Caja de Ahorro</MenuItem>
+                    <MenuItem value={"CTACTE"}>Cuenta Corriente</MenuItem>
                   </Select>
-                </FormControl><br />
+                </FormControl>
+                <br />
                 <TextField
                   required
                   id="Destino"
@@ -335,7 +422,7 @@ if (origen==="CA"){
         <center>
           <br></br>
           <br></br>
-          <Link to={{ pathname: "/HomeCA"}}>
+          <Link to={{ pathname: "/HomeCA" }}>
             <Button color="secondary">VOLVER</Button>
           </Link>{" "}
           <br></br>

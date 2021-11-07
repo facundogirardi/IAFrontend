@@ -1083,7 +1083,6 @@ export const updatePago = async function ({
 
 // Acutualizo usuarios cbu CA
 
-
 export const updateTarjeta = async function (
   codigotransaccion,
   cuitEmpresa,
@@ -1091,7 +1090,7 @@ export const updateTarjeta = async function (
   descripcion,
   fechaVencimiento,
   pagado,
-  cuit,
+  cuit
 ) {
   let url = urlWebServices.updateTarjeta;
   const formData = new URLSearchParams();
@@ -1545,5 +1544,48 @@ export const getMantenimientoClave = async function (clave) {
     }
   } catch (error) {
     console.log("error", error);
+  }
+};
+
+// Acutualizo mantenimiento
+export const updateClearing = async function (
+  cbuPropio,
+  cbuUsuarioO,
+  cbuUsuarioD,
+  importe,
+  descripcion,
+  pagado,
+  codigo
+) {
+  let url = urlWebServices.updateClearing;
+  const formData = new URLSearchParams();
+  formData.append("cbuPropio", cbuPropio);
+  formData.append("cbuUsuarioO", cbuUsuarioO);
+  formData.append("cbuUsuarioD", cbuUsuarioD);
+  formData.append("importe", importe);
+  formData.append("descripcion", descripcion);
+  formData.append("pagado", pagado);
+  formData.append("codigo", codigo);
+
+  try {
+    let response = await fetch(url, {
+      method: "PUT", // or 'PUT'
+      mode: "cors",
+      headers: {
+        Accept: "application/x-www-form-urlencoded",
+        Origin: "http://localhost:3000",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formData,
+    });
+
+    if (response.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log("error", error);
+    return false;
   }
 };
