@@ -310,6 +310,38 @@ export const getEmpresa = async function () {
   }
 };
 
+
+// Recupero Empresas
+export const getClearings = async function () {
+  let url = urlWebServices.getClearings;
+
+  try {
+    let response = await fetch(url, {
+      method: "GET", // or 'PUT'
+      mode: "cors",
+      headers: {
+        Accept: "application/x-www-form-urlencoded",
+        "x-access-token": localStorage.getItem("x"),
+        Origin: "http://localhost:3000",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    if (response.status === 200) {
+      let data = await response.json();
+
+      let listaSueldos = data.data.docs;
+      return listaSueldos;
+    } else {
+      let vacio = [];
+      console.log("No hay clearings");
+      return vacio;
+    }
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
 // Recupero Empresas
 export const getTarjetaCUITEmpresa = async function () {
   let url = urlWebServices.getTarjetaCUITEmpresa;
@@ -1546,7 +1578,7 @@ export const getMantenimientoClave = async function (clave) {
 };
 
 // Acutualizo mantenimiento
-export const updateClearing = async function (
+export const updateClearing = async function ({
   cbuPropio,
   cbuUsuarioO,
   cbuUsuarioD,
@@ -1554,7 +1586,7 @@ export const updateClearing = async function (
   descripcion,
   pagado,
   codigo
-) {
+}) {
   let url = urlWebServices.updateClearing;
   const formData = new URLSearchParams();
   formData.append("cbuPropio", cbuPropio);

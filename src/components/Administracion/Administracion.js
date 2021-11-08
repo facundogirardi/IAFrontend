@@ -25,8 +25,8 @@ import {
   getComercios,
   updateComercio,
   updateClearing,
+  getClearings,
 } from "../../controller/miApp.controller";
-import { getClearings } from "../../controller/miAppExterno.controller";
 
 const useStylesGrid = makeStyles((theme) => ({
   root: {
@@ -309,6 +309,7 @@ export default function Encuesta(props) {
         if (usuarioB !== 201 && usuarioA !== 201) {
           reportes[step].pagado = "1";
 
+          console.log("update clearing", reportes[step]);
           updateClearing(reportes[step]);
           usuarioA[0].balanceca =
             parseFloat(usuarioA[0].balanceca) -
@@ -356,7 +357,7 @@ export default function Encuesta(props) {
         console.log("Hay errores en algunos campos");
       }
     }
-    swal(" ", "Sueldos pagados", "success");
+    swal(" ", "Clearing realizado", "success");
   };
 
   const history = useHistory();
