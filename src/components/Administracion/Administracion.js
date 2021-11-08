@@ -83,15 +83,16 @@ export default function Encuesta(props) {
   //Ejecuto el endopoint para validar el CBU & guardar el monto
   const validarSueldo = async function () {
     const reportes = await getSueldo();
-
+    let date = new Date();
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
-      if (reportes[step].pagado == "0") {
+      if (reportes[step].pagado == "0" && Date.parse(reportes[step].fechaPago)<date) {
         const usuarioB = await getUsuarioCBU(reportes[step].cbu);
         const usuarioA = await getUsuarioCBU(reportes[step].cbuEmpresa);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
+          console.log("A: "+usuarioA+" B: "+usuarioB);
           reportes[step].pagado = "1";
 
           updateSueldo(reportes[step]);
@@ -220,47 +221,28 @@ export default function Encuesta(props) {
   const validarDau = async function () {
     const reportes = await getEmpresa();
     const cantidad = reportes.length;
-
+    let date = new Date();
+console.log("Cantidad: "+reportes.length)
     for (let step = 0; step < cantidad; step++) {
       if (
-        (reportes[step].estado !== "Pago total" ||
+        (reportes[step].estado !== "Pago total" &&
           reportes[step].estado !== "Pago parcial") &&
-        reportes[step].debito == "1"
-      ) {
-        const usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
-        const usuarioA = await getUsuarioCuit(reportes[step].cuit);
+        reportes[step].debito == "1" && Date.parse(reportes[step].fechaVencimiento)>=date
+      ) { console.log("entra: "+reportes[step].codigopago+" Cuit Empresa: "+reportes[step].cuitEmpresa+" Cuit Persona: "+reportes[step].cuit);
+        let usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
+        let usuarioA = await getUsuarioCuit(reportes[step].cuit);
+console.log("A: "+usuarioA[0]+" B: "+usuarioB[0]);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
           reportes[step].estado = "Pago total";
 
           updateEmpresa(reportes[step]);
+console.log("BALANCECA B: "+usuarioB[0].balanceca+" importe: "+reportes[step].importe);
 
-          usuarioA[0].balanceca =
-            parseFloat(usuarioA[0].balanceca) -
+          let nbb = parseFloat(usuarioB[0].balanceca) +
             parseFloat(reportes[step].importe);
-
-          const importeM = -reportes[step].importe;
-          const usuarioM = usuarioA[0].usuario;
-          const importeCAM = usuarioA[0].balanceca;
-
-          const tipomovimientoM =
-            "Debito Automatico - " + reportes[step].descripcion;
-          const importeCCM = usuarioA[0].balancecc;
-          GeneroMovimiento(
-            usuarioM,
-            tipomovimientoM,
-            importeM,
-            importeCAM,
-            importeCCM
-          );
-          updateUsuario(usuarioA[0]);
-
-          // Grabo usuario
-
-          usuarioB[0].balanceca =
-            parseFloat(usuarioB[0].balanceca) +
-            parseFloat(reportes[step].importe);
-
+            usuarioB[0].balanceca  = nbb;
+            updateUsuario(usuarioB[0]);
           const importeM1 = +reportes[step].importe;
           const usuarioM1 = usuarioB[0].usuario;
           const importeCAM1 = usuarioB[0].balanceca;
@@ -275,7 +257,32 @@ export default function Encuesta(props) {
             importeCAM1,
             importeCCM1
           );
-          updateUsuario(usuarioB[0]);
+          
+          console.log("BALANCECA A: "+usuarioA[0].balanceca+" importe: "+reportes[step].importe);
+          let nba = 
+            parseFloat(usuarioA[0].balanceca) -
+            parseFloat(reportes[step].importe);
+            usuarioA[0].balanceca = nba;
+            updateUsuario(usuarioA[0]);
+          const importeM = -reportes[step].importe;
+          const usuarioM = usuarioA[0].usuario;
+          const importeCAM = usuarioA[0].balanceca;
+
+          const tipomovimientoM =
+            "Debito Automatico - " + reportes[step].descripcion;
+          const importeCCM = usuarioA[0].balancecc;
+          GeneroMovimiento(
+            usuarioM,
+            tipomovimientoM,
+            importeM,
+            importeCAM,
+            importeCCM
+          );
+          
+          
+          // Grabo usuario
+
+          
         }
       } else {
         console.log("Hay errores en algunos campos");

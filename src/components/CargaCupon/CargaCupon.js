@@ -212,21 +212,20 @@ export default function Encuesta(props) {
   const validarLogin1 = async function () {
     const reportes = await getEmpresa();
     const cantidad = reportes.length;
+    const usuarioclave = await getUsuarioUsuario(
+      window.localStorage.getItem("name")
+    );
+    setUsuarioclave(usuarioclave[0]);
+    const usuarioB = await getUsuarioCuit(usuarioclave[0].cuit);
+    
 
     for (let step = 0; step < cantidad; step++) {
+      const usuarioA = await getUsuarioCuit(reportes[step].cuit);
       if (
         reportes[step].estado !== "Pago total" &&
         reportes[step].estado !== "Pago parcial" &&
-        reportes[step].debito == "1"
+        reportes[step].debito == "1" && usuarioB[0].cuit==reportes[step].cuitEmpresa
       ) {
-        const usuarioclave = await getUsuarioUsuario(
-          window.localStorage.getItem("name")
-        );
-        setUsuarioclave(usuarioclave[0]);
-
-        const usuarioB = await getUsuarioCuit(usuarioclave.cuit);
-        const usuarioA = await getUsuarioCuit(reportes[step].cuit);
-
         if (usuarioB !== 201 && usuarioA !== 201) {
           reportes[step].estado = "Pago total";
 

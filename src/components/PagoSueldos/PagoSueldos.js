@@ -96,6 +96,7 @@ export default function Encuesta(props) {
   const [FechaPago, setFechaPago] = React.useState("");
   const [pagado, setFechaPagado] = React.useState("0");
   const [reportes, setReportes] = useState([]);
+  const [reportesDos, setReportesDos] = useState([]);
   const [usuarioclave, setUsuarioclave] = useState([]);
 
   const handleImporte = (event) => {
@@ -142,14 +143,25 @@ export default function Encuesta(props) {
   const validarLogin = async function () {
     const reportes = await getSueldo();
 
+    
+
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
-      if (reportes[step].pagado == "0") {
+
+      const reportesDos = await getUsuarioUsuario(
+        window.localStorage.getItem("name")
+      );
+      setReportesDos(reportesDos[0]);
+
+      if (reportes[step].pagado == "0" && reportes[step].cbuEmpresa==reportesDos[0].cbu)  {
         const usuarioB = await getUsuarioCBU(reportes[step].cbu);
-        const usuarioA = await getUsuarioCBU(reportes[step].cbuEmpresa);
+        const usuarioA = await getUsuarioCBU(reportesDos[0].cbu);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
+
+          
+ 
           reportes[step].pagado = "1";
 
           updateSueldo(reportes[step]);
@@ -193,12 +205,12 @@ export default function Encuesta(props) {
             importeCAM1,
             importeCCM1
           );
-          updateUsuario(usuarioB[0]);
-        }
+          updateUsuario(usuarioB[0]); 
+ 
       } else {
         console.log("Hay errores en algunos campos");
       }
-    }
+    }}
     swal(" ", "Sueldos pagados", "success");
   };
 

@@ -604,7 +604,6 @@ export const getUsuarioUsuario = async function (usuario) {
       return listaReporteID;
     } else {
       let vacio = [];
-      console.log("No hay Usuarios por ese Usuario");
       return vacio;
     }
   } catch (error) {
@@ -637,8 +636,7 @@ export const getUsuarioCuit = async function (cuit) {
       let listaReporteID = data.data.docs;
       return listaReporteID;
     } else {
-      let vacio = [];
-      console.log("No hay Usuarios por ese Usuario");
+      let vacio = 201;
       return vacio;
     }
   } catch (error) {
@@ -928,7 +926,7 @@ export const updateUserP = async function ({
 };
 
 // Acutualizo usuarios cbu CA
-export const updateEmpresa = async function (
+export const updateEmpresa = async function ( {
   nombre,
   codigopago,
   cuitEmpresa,
@@ -938,7 +936,7 @@ export const updateEmpresa = async function (
   estado,
   cuit,
   debito
-) {
+}) {
   let url = urlWebServices.updateEmpresa;
   const formData = new URLSearchParams();
   formData.append("nombre", nombre);
