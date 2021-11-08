@@ -709,32 +709,32 @@ export const updateUsuario = async function ({
 }) {
   let url = urlWebServices.updateUsuario;
   const formData = new URLSearchParams();
-  formData.append("estadocuenta", estadocuenta);
-  formData.append("cbu", cbu);
-  formData.append("cbuCC", cbuCC);
-  formData.append("nrocuenta", nrocuenta);
-  formData.append("numerocajacc", numerocajacc);
-  formData.append("balancecc", balancecc);
-  formData.append("numerocajaca", numerocajaca);
-  formData.append("balanceca", balanceca);
-  formData.append("usuario", usuario);
-  formData.append("password", password);
-  formData.append("usuariotipo", usuariotipo);
-  formData.append("tipodni", tipodni);
-  formData.append("dni", dni);
-  formData.append("nacimiento", nacimiento);
-  formData.append("telefono", telefono);
-  formData.append("cuit", cuit);
-  formData.append("calle", calle);
-  formData.append("altura", altura);
-  formData.append("ciudad", ciudad);
-  formData.append("provincia", provincia);
-  formData.append("piso", piso);
-  formData.append("depto", depto);
-  formData.append("empresa", empresa);
-  formData.append("nombre", nombre);
-  formData.append("apellido", apellido);
-  formData.append("email", email);
+  formData.append("nombre",nombre)
+  formData.append("apellido",apellido)
+  formData.append("tipodni", tipodni)
+  formData.append("dni",dni)
+  formData.append("email",email)
+  formData.append("estadocuenta",estadocuenta)
+  formData.append("usuario",usuario)
+  formData.append("password",password)
+  formData.append("usuariotipo",usuariotipo)
+  formData.append("empresa",empresa)
+  formData.append("nacimiento",nacimiento)
+  formData.append("telefono",telefono)
+  formData.append("cuit",cuit)
+  formData.append("calle",calle)
+  formData.append("altura",altura)
+  formData.append("ciudad",ciudad)
+  formData.append("piso",piso)
+  formData.append("cbu",cbu)
+  formData.append("cbuCC",cbuCC)
+  formData.append("nrocuenta",nrocuenta)
+  formData.append("numerocajacc",numerocajacc)
+  formData.append("balancecc",balancecc)
+  formData.append("numerocajaca",numerocajaca)
+  formData.append("balanceca",balanceca)
+  formData.append("provincia",provincia)
+  formData.append("depto",depto)
 
   try {
     let response = await fetch(url, {

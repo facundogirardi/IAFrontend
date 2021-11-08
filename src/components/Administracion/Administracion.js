@@ -24,7 +24,7 @@ import {
   getUsuarioCuit,
   getComercios,
   updateComercio,
-  updateClearing
+  updateClearing,
 } from "../../controller/miApp.controller";
 import { getClearings } from "../../controller/miAppExterno.controller";
 
@@ -87,12 +87,14 @@ export default function Encuesta(props) {
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
-      if (reportes[step].pagado == "0" && Date.parse(reportes[step].fechaPago)<date) {
+      if (
+        reportes[step].pagado == "0" &&
+        Date.parse(reportes[step].fechaPago) < date
+      ) {
         const usuarioB = await getUsuarioCBU(reportes[step].cbu);
         const usuarioA = await getUsuarioCBU(reportes[step].cbuEmpresa);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
-          console.log("A: "+usuarioA+" B: "+usuarioB);
           reportes[step].pagado = "1";
 
           updateSueldo(reportes[step]);
@@ -222,27 +224,25 @@ export default function Encuesta(props) {
     const reportes = await getEmpresa();
     const cantidad = reportes.length;
     let date = new Date();
-console.log("Cantidad: "+reportes.length)
     for (let step = 0; step < cantidad; step++) {
       if (
-        (reportes[step].estado !== "Pago total" &&
-          reportes[step].estado !== "Pago parcial") &&
-        reportes[step].debito == "1" && Date.parse(reportes[step].fechaVencimiento)>=date
-      ) { console.log("entra: "+reportes[step].codigopago+" Cuit Empresa: "+reportes[step].cuitEmpresa+" Cuit Persona: "+reportes[step].cuit);
+        reportes[step].estado !== "Pago total" &&
+        reportes[step].estado !== "Pago parcial" &&
+        reportes[step].debito == "1" &&
+        Date.parse(reportes[step].fechaVencimiento) >= date
+      ) {
         let usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
         let usuarioA = await getUsuarioCuit(reportes[step].cuit);
-console.log("A: "+usuarioA[0]+" B: "+usuarioB[0]);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
-          reportes[step].estado = "Pago total";
-
-          updateEmpresa(reportes[step]);
-console.log("BALANCECA B: "+usuarioB[0].balanceca+" importe: "+reportes[step].importe);
-
-          let nbb = parseFloat(usuarioB[0].balanceca) +
+          usuarioB[0].balanceca =
+            parseFloat(usuarioB[0].balanceca) +
             parseFloat(reportes[step].importe);
-            usuarioB[0].balanceca  = nbb;
-            updateUsuario(usuarioB[0]);
+          console.log("antes B", usuarioB[0].balanceca);
+          updateUsuario(usuarioB[0]);
+          console.log("metodo B", updateUsuario(usuarioB[0]));
+          console.log("despues B", usuarioB[0].balanceca);
+
           const importeM1 = +reportes[step].importe;
           const usuarioM1 = usuarioB[0].usuario;
           const importeCAM1 = usuarioB[0].balanceca;
@@ -257,13 +257,15 @@ console.log("BALANCECA B: "+usuarioB[0].balanceca+" importe: "+reportes[step].im
             importeCAM1,
             importeCCM1
           );
-          
-          console.log("BALANCECA A: "+usuarioA[0].balanceca+" importe: "+reportes[step].importe);
-          let nba = 
+
+          usuarioA[0].balanceca =
             parseFloat(usuarioA[0].balanceca) -
             parseFloat(reportes[step].importe);
-            usuarioA[0].balanceca = nba;
-            updateUsuario(usuarioA[0]);
+          console.log("antes A", usuarioA[0].balanceca);
+          updateUsuario(usuarioA[0]);
+          console.log("metodo A", updateUsuario(usuarioA[0]));
+          console.log("despues A", usuarioA[0].balanceca);
+
           const importeM = -reportes[step].importe;
           const usuarioM = usuarioA[0].usuario;
           const importeCAM = usuarioA[0].balanceca;
@@ -278,11 +280,9 @@ console.log("BALANCECA B: "+usuarioB[0].balanceca+" importe: "+reportes[step].im
             importeCAM,
             importeCCM
           );
-          
-          
-          // Grabo usuario
 
-          
+          reportes[step].estado = "Pago total";
+          updateEmpresa(reportes[step]);
         }
       } else {
         console.log("Hay errores en algunos campos");
