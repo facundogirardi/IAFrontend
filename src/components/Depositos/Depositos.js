@@ -132,7 +132,7 @@ export default function Encuesta(props) {
                   }, 1300);
                 });
               } else {
-                swal(" ", "MONTO DEPOSITADO CORRECTAMENTE", "success");
+                swal(" ", "NO EXISTE EL CBU INGRESADO", "error");
                 setTimeout(() => {
                   window.location.reload(true);
                 }, 1300);

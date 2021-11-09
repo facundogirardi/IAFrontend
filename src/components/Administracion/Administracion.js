@@ -154,11 +154,11 @@ export default function Encuesta(props) {
   //Ejecuto el endopoint para validar el CBU & guardar el monto
   const validarPagoTarjetaComercio = async function () {
     const reportes = await getComercios();
-
+    let date = new Date();
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
-      if (reportes[step].pagado === "0") {
+      if (reportes[step].pagado === "0" && Date.parse(reportes[step].fechaPago) < date) {
         const usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
         const usuarioA = await getUsuarioCuit(reportes[step].cuit);
 
@@ -166,9 +166,14 @@ export default function Encuesta(props) {
           reportes[step].pagado = "1";
 
           updateComercio(reportes[step]);
+          if (parseFloat(usuarioB[0].balanceca) - parseFloat(reportes[step].importe) >= 0) {
           usuarioB[0].balanceca =
             parseFloat(usuarioB[0].balanceca) -
-            parseFloat(reportes[step].importe);
+            parseFloat(reportes[step].importe); } else {
+              usuarioB[0].balancecc =
+              parseFloat(usuarioB[0].balancecc) -
+              parseFloat(reportes[step].importe);
+            }
 
           const importeM = -reportes[step].importe;
           const usuarioM = usuarioB[0].usuario;
@@ -258,9 +263,13 @@ export default function Encuesta(props) {
             importeCCM1
           );
 
-          usuarioA[0].balanceca =
+          if (parseFloat(usuarioA[0].balanceca) - parseFloat(reportes[step].importe) >= 0) {   usuarioA[0].balanceca =
             parseFloat(usuarioA[0].balanceca) -
+            parseFloat(reportes[step].importe); } else {
+              usuarioA[0].balancecc =
+            parseFloat(usuarioA[0].balancecc) -
             parseFloat(reportes[step].importe);
+            }
           console.log("antes A", usuarioA[0].balanceca);
           updateUsuario(usuarioA[0]);
           console.log("metodo A", updateUsuario(usuarioA[0]));

@@ -116,7 +116,7 @@ export default function Usuario(props) {
                   });
                 });
               } else {
-                swal(" ", "MONTO DEPOSITADO CORRECTAMENTE", "success");
+                swal(" ", "NO EXISTE EL CBU INGRESADO", "error");
                 history.push({
                   pathname: "/HomeCA", //paso el usuario temporalmente
                 });
