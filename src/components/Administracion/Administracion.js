@@ -77,7 +77,9 @@ export default function Encuesta(props) {
   const clase5 = useStylesGrid();
 
   const Sueldo = () => {
-    validarSueldo();
+    setInterval(function () {
+      validarSueldo();
+    }, 28800058);
   };
 
   //Ejecuto el endopoint para validar el CBU & guardar el monto
@@ -148,7 +150,9 @@ export default function Encuesta(props) {
   };
 
   const PagoTarjetaComercio = () => {
-    validarPagoTarjetaComercio();
+    setInterval(function () {
+      validarPagoTarjetaComercio();
+    }, 28800058);
   };
 
   //Ejecuto el endopoint para validar el CBU & guardar el monto
@@ -166,11 +170,10 @@ export default function Encuesta(props) {
         let usuarioA = await getUsuarioCuit(reportes[step].cuit);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
-
           usuarioB[0].balanceca =
             parseFloat(usuarioB[0].balanceca) -
             parseFloat(reportes[step].importe);
-            
+
           console.log("antes B", usuarioB[0].balanceca);
           updateUsuario(usuarioB[0]);
           console.log("metodo B", updateUsuario(usuarioB[0]));
@@ -226,7 +229,6 @@ export default function Encuesta(props) {
 
           reportes[step].pagado = "1";
           updateComercio(reportes[step]);
-
         }
       } else {
         console.log("Hay errores en algunos campos");
@@ -236,7 +238,9 @@ export default function Encuesta(props) {
   };
 
   const Dau = () => {
-    validarDau();
+    setInterval(function () {
+      validarDau();
+    }, 28800058);
   };
 
   //Debitos Automaticos
@@ -322,8 +326,11 @@ export default function Encuesta(props) {
   };
 
   // CLearing Bancario
+
   const Clearing = () => {
-    validarClearing();
+    setInterval(function () {
+      validarClearing();
+    }, 28800058);
   };
 
   const validarClearing = async function () {
