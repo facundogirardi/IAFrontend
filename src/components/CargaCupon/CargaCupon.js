@@ -453,9 +453,7 @@ export default function Encuesta(props) {
               </Button>
               <br />
               <br />
-              <Button variant="contained" color="Primary" onClick={BuscoCBU1}>
-                EFECTUAR DEBITOS AUTOMATICOS
-              </Button>
+
             </center>
           </Grid>
         </div>

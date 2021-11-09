@@ -89,10 +89,10 @@ export default function Encuesta(props) {
     for (let step = 0; step < cantidad; step++) {
       if (
         reportes[step].pagado == "0" &&
-        Date.parse(reportes[step].fechaPago) < date
+        Date.parse(reportes[step].fechaPago) <= date
       ) {
-        const usuarioB = await getUsuarioCBU(reportes[step].cbu);
-        const usuarioA = await getUsuarioCBU(reportes[step].cbuEmpresa);
+        let usuarioB = await getUsuarioCBU(reportes[step].cbu);
+        let usuarioA = await getUsuarioCBU(reportes[step].cbuEmpresa);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
           reportes[step].pagado = "1";
@@ -158,52 +158,31 @@ export default function Encuesta(props) {
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
-      if (reportes[step].pagado === "0" && Date.parse(reportes[step].fechaPago) < date) {
-        const usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
-        const usuarioA = await getUsuarioCuit(reportes[step].cuit);
+      if (
+        reportes[step].pagado == "0" &&
+        Date.parse(reportes[step].fechaPago) <= date
+      ) {
+        let usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
+        let usuarioA = await getUsuarioCuit(reportes[step].cuit);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
-          reportes[step].pagado = "1";
 
-          updateComercio(reportes[step]);
-          if (parseFloat(usuarioB[0].balanceca) - parseFloat(reportes[step].importe) >= 0) {
           usuarioB[0].balanceca =
             parseFloat(usuarioB[0].balanceca) -
-            parseFloat(reportes[step].importe); } else {
-              usuarioB[0].balancecc =
-              parseFloat(usuarioB[0].balancecc) -
-              parseFloat(reportes[step].importe);
-            }
-
-          const importeM = -reportes[step].importe;
-          const usuarioM = usuarioB[0].usuario;
-          const importeCAM = usuarioB[0].balanceca;
-
-          const tipomovimientoM =
-            "Pago de Tarjetas a Comercios - " + reportes[step].descripcion;
-          const importeCCM = usuarioB[0].balancecc;
-          GeneroMovimiento(
-            usuarioM,
-            tipomovimientoM,
-            importeM,
-            importeCAM,
-            importeCCM
-          );
-          updateUsuario(usuarioB[0]);
-
-          // Grabo usuario
-
-          usuarioA[0].balanceca =
-            parseFloat(usuarioA[0].balanceca) +
             parseFloat(reportes[step].importe);
+            
+          console.log("antes B", usuarioB[0].balanceca);
+          updateUsuario(usuarioB[0]);
+          console.log("metodo B", updateUsuario(usuarioB[0]));
+          console.log("despues B", usuarioB[0].balanceca);
 
           const importeM1 = +reportes[step].importe;
-          const usuarioM1 = usuarioA[0].usuario;
-          const importeCAM1 = usuarioA[0].balanceca;
+          const usuarioM1 = usuarioB[0].usuario;
+          const importeCAM1 = usuarioB[0].balanceca;
 
           const tipomovimientoM1 =
-            "Pago a comercios - " + reportes[step].descripcion;
-          const importeCCM1 = usuarioA[0].balancecc;
+            "Debito Automatico - " + reportes[step].descripcion;
+          const importeCCM1 = usuarioB[0].balancecc;
           GeneroMovimiento(
             usuarioM1,
             tipomovimientoM1,
@@ -211,13 +190,49 @@ export default function Encuesta(props) {
             importeCAM1,
             importeCCM1
           );
+
+          if (
+            parseFloat(usuarioA[0].balanceca) +
+              parseFloat(reportes[step].importe) >=
+            0
+          ) {
+            usuarioA[0].balanceca =
+              parseFloat(usuarioA[0].balanceca) +
+              parseFloat(reportes[step].importe);
+          } else {
+            usuarioA[0].balancecc =
+              parseFloat(usuarioA[0].balancecc) +
+              parseFloat(reportes[step].importe);
+          }
+          console.log("antes A", usuarioA[0].balanceca);
           updateUsuario(usuarioA[0]);
+          console.log("metodo A", updateUsuario(usuarioA[0]));
+          console.log("despues A", usuarioA[0].balanceca);
+
+          const importeM = -reportes[step].importe;
+          const usuarioM = usuarioA[0].usuario;
+          const importeCAM = usuarioA[0].balanceca;
+
+          const tipomovimientoM =
+            "Debito Automatico - " + reportes[step].descripcion;
+          const importeCCM = usuarioA[0].balancecc;
+          GeneroMovimiento(
+            usuarioM,
+            tipomovimientoM,
+            importeM,
+            importeCAM,
+            importeCCM
+          );
+
+          reportes[step].pagado = "1";
+          updateComercio(reportes[step]);
+
         }
       } else {
         console.log("Hay errores en algunos campos");
       }
     }
-    swal(" ", "Pagos de Tarjeta a Comercios Efectuados", "success");
+    swal(" ", "Pagos a Comercios Efectuados", "success");
   };
 
   const Dau = () => {
@@ -263,13 +278,19 @@ export default function Encuesta(props) {
             importeCCM1
           );
 
-          if (parseFloat(usuarioA[0].balanceca) - parseFloat(reportes[step].importe) >= 0) {   usuarioA[0].balanceca =
+          if (
             parseFloat(usuarioA[0].balanceca) -
-            parseFloat(reportes[step].importe); } else {
-              usuarioA[0].balancecc =
-            parseFloat(usuarioA[0].balancecc) -
-            parseFloat(reportes[step].importe);
-            }
+              parseFloat(reportes[step].importe) >=
+            0
+          ) {
+            usuarioA[0].balanceca =
+              parseFloat(usuarioA[0].balanceca) -
+              parseFloat(reportes[step].importe);
+          } else {
+            usuarioA[0].balancecc =
+              parseFloat(usuarioA[0].balancecc) -
+              parseFloat(reportes[step].importe);
+          }
           console.log("antes A", usuarioA[0].balanceca);
           updateUsuario(usuarioA[0]);
           console.log("metodo A", updateUsuario(usuarioA[0]));
@@ -313,35 +334,10 @@ export default function Encuesta(props) {
     for (let step = 0; step < cantidad; step++) {
       if (reportes[step].pagado == "0") {
         const usuarioB = await getUsuarioCBU(reportes[step].cbuUsuarioD);
-        const usuarioA = await getUsuarioCBU(reportes[step].cbuUsuarioO);
 
-        if (usuarioB !== 201 && usuarioA !== 201) {
+        if (usuarioB !== 201) {
           reportes[step].pagado = "1";
-
-          console.log("update clearing", reportes[step]);
           updateClearing(reportes[step]);
-          usuarioA[0].balanceca =
-            parseFloat(usuarioA[0].balanceca) -
-            parseFloat(reportes[step].importe);
-
-          const importeM = -reportes[step].importe;
-          const usuarioM = usuarioA[0].usuario;
-          const importeCAM = usuarioA[0].balanceca;
-
-          const tipomovimientoM =
-            "Transferencia Externa - " + reportes[step].descripcion;
-          const importeCCM = usuarioA[0].balancecc;
-          GeneroMovimiento(
-            usuarioM,
-            tipomovimientoM,
-            importeM,
-            importeCAM,
-            importeCCM
-          );
-          updateUsuario(usuarioA[0]);
-
-          // Grabo usuario
-
           usuarioB[0].balanceca =
             parseFloat(usuarioB[0].balanceca) +
             parseFloat(reportes[step].importe);
@@ -440,6 +436,8 @@ export default function Encuesta(props) {
                 </Link>
                 <br />
                 <br />
+                <h5>SE EJECUTAN CADA 48HS O PULSANDO EL BOTON</h5>
+                <br />
                 <Button variant="contained" color="Primary" onClick={Sueldo}>
                   EFECTUAR PAGO DE SUELDOS
                 </Button>
@@ -460,7 +458,7 @@ export default function Encuesta(props) {
                   color="Primary"
                   onClick={PagoTarjetaComercio}
                 >
-                  EFECTUAR PAGO DE TARJETAS A COMERCIOS
+                  EFECTUAR PAGO A COMERCIOS
                 </Button>
               </form>
               <br />
