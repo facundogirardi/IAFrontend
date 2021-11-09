@@ -106,7 +106,7 @@ export default function Encuesta(props) {
     if (window.localStorage.getItem("name") !== "") {
       const reportes1 = await getMantenimientoClave("1");
       setReportes1(reportes1[0]);
-      console.log(reportes1[0].mantenimientoF);
+
     } else {
       history.push({
         pathname: "/IngresoHB",

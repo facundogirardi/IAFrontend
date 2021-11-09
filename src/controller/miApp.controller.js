@@ -439,74 +439,7 @@ export const getTarjetaCodigo = async function (codigotransaccion) {
     console.log("error", error);
   }
 };
-
-// Traer usuario por CBU
-export const getuserscbu = async function (cbu) {
-  let url = urlWebServices.getuserscbu;
-  const formData = new URLSearchParams();
-
-  formData.append("cbu", cbu);
-
-  try {
-    let response = await fetch(url, {
-      method: "POST", // or 'PUT'
-      mode: "cors",
-      headers: {
-        Accept: "application/x-www-form-urlencoded",
-        "x-access-token": localStorage.getItem("x"),
-        Origin: "http://localhost:3000",
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData,
-    });
-    if (response.status === 200) {
-      let data = await response.json();
-
-      let listaReporteID = data.data.docs;
-      return listaReporteID;
-    } else {
-      let vacio = [];
-      console.log("No hay usuarios por ese CBU");
-      return vacio;
-    }
-  } catch (error) {
-    console.log("error", error);
-  }
-};
-
-// Traer usuario por CBU CC
-export const getuserscbuCC = async function (cbuCC) {
-  let url = urlWebServices.getuserscbuCC;
-  const formData = new URLSearchParams();
-
-  formData.append("cbuCC", cbuCC);
-
-  try {
-    let response = await fetch(url, {
-      method: "POST", // or 'PUT'
-      mode: "cors",
-      headers: {
-        Accept: "application/x-www-form-urlencoded",
-        "x-access-token": localStorage.getItem("x"),
-        Origin: "http://localhost:3000",
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData,
-    });
-    if (response.status === 200) {
-      let data = await response.json();
-
-      let listaReporteID = data.data.docs;
-      return listaReporteID;
-    } else {
-      let vacio = [];
-      console.log("No hay reportes por ese CBU cc");
-      return vacio;
-    }
-  } catch (error) {
-    console.log("error", error);
-  }
-};
+ 
 
 // Traer usuario por CBU
 export const getUsuarioCBU = async function (cbu) {
@@ -737,7 +670,7 @@ export const updateUsuario = async function ({
   numerocajaca,
   balanceca,
   provincia,
-  depto,
+  depto
 }) {
   let url = urlWebServices.updateUsuario;
   const formData = new URLSearchParams();
@@ -994,7 +927,7 @@ export const updateEmpresa = async function ( {
     });
 
     if (response.status === 200) {
-      console.log("Actualiza", importe);
+   
       return true;
     } else {
       return false;
@@ -1145,7 +1078,7 @@ export const updateTarjeta = async function (
     });
 
     if (response.status === 200) {
-      console.log("Actualiza", importe);
+
       return true;
     } else {
       return false;
@@ -1405,37 +1338,6 @@ export const getMovimientos = async function () {
   }
 };
 
-export const uploadfile = async function (filePath) {
-  //url webservices
-  let url = urlWebServices.uploadfile;
-
-  console.log("filePath", filePath);
-  const formData = new FormData();
-  //agrego archivos para subir
-
-  formData.append("filePath", filePath);
-
-  try {
-    let response = await fetch(url, {
-      method: "POST", // or 'PUT'
-      mode: "cors",
-      headers: {
-        Accept: "application/form-data",
-        "x-access-token": localStorage.getItem("x"),
-        Origin: "http://localhost:3000",
-        //'Content-Type': 'application/form-data'
-      },
-      body: formData,
-    });
-
-    let archivos = await response.json();
-    console.log("respuestaUpload", archivos);
-    return archivos;
-  } catch (err) {
-    alert("Error uploading the files");
-    console.log("Error uploading the files", err);
-  }
-};
 
 // Traer empresas por ID
 export const getEmpresasID = async function (_id) {

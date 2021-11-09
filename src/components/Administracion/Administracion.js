@@ -80,6 +80,8 @@ export default function Encuesta(props) {
     setInterval(function () {
       validarSueldo();
     }, 28800058);
+
+    validarSueldo();
   };
 
   //Ejecuto el endopoint para validar el CBU & guardar el monto
@@ -153,6 +155,8 @@ export default function Encuesta(props) {
     setInterval(function () {
       validarPagoTarjetaComercio();
     }, 28800058);
+
+    validarPagoTarjetaComercio();
   };
 
   //Ejecuto el endopoint para validar el CBU & guardar el monto
@@ -170,14 +174,12 @@ export default function Encuesta(props) {
         let usuarioA = await getUsuarioCuit(reportes[step].cuit);
 
         if (usuarioB !== 201 && usuarioA !== 201) {
+
           usuarioB[0].balanceca =
             parseFloat(usuarioB[0].balanceca) -
             parseFloat(reportes[step].importe);
 
-          console.log("antes B", usuarioB[0].balanceca);
           updateUsuario(usuarioB[0]);
-          console.log("metodo B", updateUsuario(usuarioB[0]));
-          console.log("despues B", usuarioB[0].balanceca);
 
           const importeM1 = +reportes[step].importe;
           const usuarioM1 = usuarioB[0].usuario;
@@ -207,10 +209,8 @@ export default function Encuesta(props) {
               parseFloat(usuarioA[0].balancecc) +
               parseFloat(reportes[step].importe);
           }
-          console.log("antes A", usuarioA[0].balanceca);
+
           updateUsuario(usuarioA[0]);
-          console.log("metodo A", updateUsuario(usuarioA[0]));
-          console.log("despues A", usuarioA[0].balanceca);
 
           const importeM = -reportes[step].importe;
           const usuarioM = usuarioA[0].usuario;
@@ -241,6 +241,7 @@ export default function Encuesta(props) {
     setInterval(function () {
       validarDau();
     }, 28800058);
+    validarDau();
   };
 
   //Debitos Automaticos
@@ -262,10 +263,8 @@ export default function Encuesta(props) {
           usuarioB[0].balanceca =
             parseFloat(usuarioB[0].balanceca) +
             parseFloat(reportes[step].importe);
-          console.log("antes B", usuarioB[0].balanceca);
+
           updateUsuario(usuarioB[0]);
-          console.log("metodo B", updateUsuario(usuarioB[0]));
-          console.log("despues B", usuarioB[0].balanceca);
 
           const importeM1 = +reportes[step].importe;
           const usuarioM1 = usuarioB[0].usuario;
@@ -295,10 +294,8 @@ export default function Encuesta(props) {
               parseFloat(usuarioA[0].balancecc) -
               parseFloat(reportes[step].importe);
           }
-          console.log("antes A", usuarioA[0].balanceca);
+
           updateUsuario(usuarioA[0]);
-          console.log("metodo A", updateUsuario(usuarioA[0]));
-          console.log("despues A", usuarioA[0].balanceca);
 
           const importeM = -reportes[step].importe;
           const usuarioM = usuarioA[0].usuario;
@@ -331,30 +328,35 @@ export default function Encuesta(props) {
     setInterval(function () {
       validarClearing();
     }, 28800058);
+
+    validarClearing();
   };
 
   const validarClearing = async function () {
     const reportes = await getClearings();
-
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
       if (reportes[step].pagado == "0") {
         const usuarioB = await getUsuarioCBU(reportes[step].cbuUsuarioD);
+        const usuarioA = await getUsuarioCBU(reportes[step].cbuPropio);
 
-        if (usuarioB !== 201) {
-          reportes[step].pagado = "1";
-          updateClearing(reportes[step]);
+        if (usuarioB !== 201 && usuarioA !== 201) {
+
+        //  reportes[step].pagado = "1";
+        //  updateClearing(reportes[step]);
+
+          console.log("B",usuarioB[0].balanceca , reportes[step].importe)
           usuarioB[0].balanceca =
             parseFloat(usuarioB[0].balanceca) +
             parseFloat(reportes[step].importe);
-
+            updateUsuario(usuarioB[0]);
           const importeM1 = +reportes[step].importe;
           const usuarioM1 = usuarioB[0].usuario;
           const importeCAM1 = usuarioB[0].balanceca;
 
           const tipomovimientoM1 =
-            "Trasnferencia Externa - " + reportes[step].descripcion;
+            "Transferencia Externa - " + reportes[step].descripcion;
           const importeCCM1 = usuarioB[0].balancecc;
           GeneroMovimiento(
             usuarioM1,
@@ -363,7 +365,28 @@ export default function Encuesta(props) {
             importeCAM1,
             importeCCM1
           );
-          updateUsuario(usuarioB[0]);
+          
+
+          console.log("A",usuarioA[0].balanceca , reportes[step].importe)
+          usuarioA[0].balanceca =
+            parseFloat(usuarioA[0].balanceca) -
+            parseFloat(reportes[step].importe);
+
+          const importeM = -reportes[step].importe;
+          const usuarioM = usuarioA[0].usuario;
+          const importeCAM = usuarioA[0].balanceca;
+
+          const tipomovimientoM =
+            "Transferencia Externa - " + reportes[step].descripcion;
+          const importeCCM = usuarioA[0].balancecc;
+          GeneroMovimiento(
+            usuarioM,
+            tipomovimientoM,
+            importeM,
+            importeCAM,
+            importeCCM
+          );
+          updateUsuario(usuarioA[0]);
         }
       } else {
         console.log("Hay errores en algunos campos");
