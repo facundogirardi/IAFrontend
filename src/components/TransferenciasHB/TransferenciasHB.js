@@ -26,8 +26,7 @@ import {
   getMantenimientoClave,
 } from "../../controller/miApp.controller";
 import {
-  altaclearing,
-  getUsuarioCBUExterno,
+  tExterna,
 } from "../../controller/miAppExterno.controller";
 
 const useStylesGrid = makeStyles((theme) => ({
@@ -169,41 +168,41 @@ export default function Encuesta(props) {
                   );
                   swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
                 } else {
-                  getUsuarioCBUExterno(destino).then((valueE) => {
-                    if (valueE !== 201) {
-                      const numerico = parseFloat(valor);
-                      valueE[0].balancecc =
-                        numerico + parseFloat(valueE[0].balancecc);
-                      const importeCA = valueE[0].balanceca;
-                      const importeCC = valueE[0].balancecc;
-                      updateUsuario(valueE[0]).then((valueE) => {});
-                      GeneroMovimiento(
-                        valueE[0].usuario,
-                        tipomovimiento,
-                        numerico,
-                        importeCA,
-                        importeCC
+                  getUsuarioUsuario(window.localStorage.getItem("name")).then(
+                    (valueE) => {
+                      const account_origen = valueE[0].cbu;
+                      const account_destino = destino;
+                      const amount = numerico;
+
+                      tExterna(account_origen, account_destino, amount).then(
+                        (value) => {
+                          if (value == 200) {
+                            const numerico = parseFloat(valor);
+                            valueE[0].balanceca =
+                              numerico + parseFloat(valueE[0].balanceca);
+
+                            const importeCA = valueE[0].balanceca;
+                            const importeCC = valueE[0].balancecc;
+                            updateUsuario(value[0]).then((valueE) => {});
+                            GeneroMovimiento(
+                              valueE[0].usuario,
+                              tipomovimiento,
+                              numerico,
+                              importeCA,
+                              importeCC
+                            );
+                            swal(
+                              " ",
+                              "TRANSFERENCIA REALIZADA CON ÉXITO",
+                              "success"
+                            );
+                          } else {
+                            swal(" ", "USUARIO INEXISTENTE/ERRONEO", "error");
+                          }
+                        }
                       );
-                      const cbuPropio = "946677575890325000000";
-                      const cbuUsuarioO = value[0].cbu;
-                      const cbuUsuarioD = destino;
-                      const importe = numerico;
-                      const descripcion =
-                        "Transferencia externa : " + value[0].usuario;
-                      //   const pagado = 0;
-                      altaclearing(
-                        cbuPropio,
-                        cbuUsuarioO,
-                        cbuUsuarioD,
-                        importe,
-                        descripcion
-                        //    pagado,
-                      );
-                      swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
-                    } else {
-                      swal(" ", "USUARIO INEXISTENTE", "error");
                     }
-                  });
+                  );
                 }
               });
             }
@@ -276,41 +275,41 @@ export default function Encuesta(props) {
                   );
                   swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
                 } else {
-                  getUsuarioCBUExterno(destino).then((valueE) => {
-                    if (valueE !== 201) {
-                      const numerico = parseFloat(valor);
-                      valueE[0].balancecc =
-                        numerico + parseFloat(valueE[0].balancecc);
-                      const importeCA = valueE[0].balanceca;
-                      const importeCC = valueE[0].balancecc;
-                      updateUsuario(valueE[0]).then((valueE) => {});
-                      GeneroMovimiento(
-                        valueE[0].usuario,
-                        tipomovimiento,
-                        numerico,
-                        importeCA,
-                        importeCC
+                  getUsuarioUsuario(window.localStorage.getItem("name")).then(
+                    (valueE) => {
+                      const account_origen = valueE[0].cbuCC;
+                      const account_destino = destino;
+                      const amount = numerico;
+
+                      tExterna(account_origen, account_destino, amount).then(
+                        (value) => {
+                          if (value == 200) {
+                            const numerico = parseFloat(valor);
+                            valueE[0].balancecc =
+                              numerico + parseFloat(valueE[0].balancecc);
+
+                            const importeCA = valueE[0].balanceca;
+                            const importeCC = valueE[0].balancecc;
+                            updateUsuario(value[0]).then((valueE) => {});
+                            GeneroMovimiento(
+                              valueE[0].usuario,
+                              tipomovimiento,
+                              numerico,
+                              importeCA,
+                              importeCC
+                            );
+                            swal(
+                              " ",
+                              "TRANSFERENCIA REALIZADA CON ÉXITO",
+                              "success"
+                            );
+                          } else {
+                            swal(" ", "USUARIO INEXISTENTE/ERRONEO", "error");
+                          }
+                        }
                       );
-                      const cbuPropio = "946677575890325000000";
-                      const cbuUsuarioO = value[0].cbu;
-                      const cbuUsuarioD = destino;
-                      const importe = numerico;
-                      const descripcion =
-                        "Transferencia externa : " + value[0].usuario;
-                      //   const pagado = 0;
-                      altaclearing(
-                        cbuPropio,
-                        cbuUsuarioO,
-                        cbuUsuarioD,
-                        importe,
-                        descripcion
-                        //    pagado,
-                      );
-                      swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
-                    } else {
-                      swal(" ", "USUARIO INEXISTENTE", "error");
                     }
-                  });
+                  );
                 }
               });
             }
