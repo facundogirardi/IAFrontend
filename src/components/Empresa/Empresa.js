@@ -220,14 +220,15 @@ export default function Encuesta(props) {
                   {" "}
                   <Button color="primary">PAGO DE SUELDOS</Button>
                 </Link>
-                <Link to={{ pathname: "/Administracion" }}>
-                  {" "}
-                  <Button color="primary">ADMINISTRACION</Button>
-                </Link>
+                
 
                 <Button variant="outlined" color="primary">
                 ALTA DE CUPON
                 </Button>
+                <Link to={{ pathname: "/Administracion" }}>
+                  {" "}
+                  <Button color="primary">ADMINISTRACION</Button>
+                </Link>
               </ButtonGroup>
             </center>
           </Grid>
