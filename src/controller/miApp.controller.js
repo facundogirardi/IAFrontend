@@ -310,7 +310,6 @@ export const getEmpresa = async function () {
   }
 };
 
-
 // Recupero Empresas
 export const getClearings = async function () {
   let url = urlWebServices.getClearings;
@@ -439,7 +438,6 @@ export const getTarjetaCodigo = async function (codigotransaccion) {
     console.log("error", error);
   }
 };
- 
 
 // Traer usuario por CBU
 export const getUsuarioCBU = async function (cbu) {
@@ -670,36 +668,36 @@ export const updateUsuario = async function ({
   numerocajaca,
   balanceca,
   provincia,
-  depto
+  depto,
 }) {
   let url = urlWebServices.updateUsuario;
   const formData = new URLSearchParams();
-  formData.append("nombre",nombre)
-  formData.append("apellido",apellido)
-  formData.append("tipodni", tipodni)
-  formData.append("dni",dni)
-  formData.append("email",email)
-  formData.append("estadocuenta",estadocuenta)
-  formData.append("usuario",usuario)
-  formData.append("password",password)
-  formData.append("usuariotipo",usuariotipo)
-  formData.append("empresa",empresa)
-  formData.append("nacimiento",nacimiento)
-  formData.append("telefono",telefono)
-  formData.append("cuit",cuit)
-  formData.append("calle",calle)
-  formData.append("altura",altura)
-  formData.append("ciudad",ciudad)
-  formData.append("piso",piso)
-  formData.append("cbu",cbu)
-  formData.append("cbuCC",cbuCC)
-  formData.append("nrocuenta",nrocuenta)
-  formData.append("numerocajacc",numerocajacc)
-  formData.append("balancecc",balancecc)
-  formData.append("numerocajaca",numerocajaca)
-  formData.append("balanceca",balanceca)
-  formData.append("provincia",provincia)
-  formData.append("depto",depto)
+  formData.append("nombre", nombre);
+  formData.append("apellido", apellido);
+  formData.append("tipodni", tipodni);
+  formData.append("dni", dni);
+  formData.append("email", email);
+  formData.append("estadocuenta", estadocuenta);
+  formData.append("usuario", usuario);
+  formData.append("password", password);
+  formData.append("usuariotipo", usuariotipo);
+  formData.append("empresa", empresa);
+  formData.append("nacimiento", nacimiento);
+  formData.append("telefono", telefono);
+  formData.append("cuit", cuit);
+  formData.append("calle", calle);
+  formData.append("altura", altura);
+  formData.append("ciudad", ciudad);
+  formData.append("piso", piso);
+  formData.append("cbu", cbu);
+  formData.append("cbuCC", cbuCC);
+  formData.append("nrocuenta", nrocuenta);
+  formData.append("numerocajacc", numerocajacc);
+  formData.append("balancecc", balancecc);
+  formData.append("numerocajaca", numerocajaca);
+  formData.append("balanceca", balanceca);
+  formData.append("provincia", provincia);
+  formData.append("depto", depto);
 
   try {
     let response = await fetch(url, {
@@ -891,7 +889,7 @@ export const updateUserP = async function ({
 };
 
 // Acutualizo usuarios cbu CA
-export const updateEmpresa = async function ( {
+export const updateEmpresa = async function ({
   nombre,
   codigopago,
   cuitEmpresa,
@@ -900,7 +898,7 @@ export const updateEmpresa = async function ( {
   fechaVencimiento,
   estado,
   cuit,
-  debito
+  debito,
 }) {
   let url = urlWebServices.updateEmpresa;
   const formData = new URLSearchParams();
@@ -927,7 +925,6 @@ export const updateEmpresa = async function ( {
     });
 
     if (response.status === 200) {
-   
       return true;
     } else {
       return false;
@@ -1078,7 +1075,6 @@ export const updateTarjeta = async function (
     });
 
     if (response.status === 200) {
-
       return true;
     } else {
       return false;
@@ -1338,7 +1334,6 @@ export const getMovimientos = async function () {
   }
 };
 
-
 // Traer empresas por ID
 export const getEmpresasID = async function (_id) {
   let url = urlWebServices.getEmpresasID;
@@ -1487,7 +1482,7 @@ export const updateClearing = async function ({
   importe,
   descripcion,
   pagado,
-  codigo
+  codigo,
 }) {
   let url = urlWebServices.updateClearing;
   const formData = new URLSearchParams();

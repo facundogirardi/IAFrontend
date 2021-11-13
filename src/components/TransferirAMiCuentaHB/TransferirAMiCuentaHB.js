@@ -169,7 +169,7 @@ var descubierto = 0;
   
       if (numerico < 1) {
         swal(" ", "NO SE PUEDE TRANSFERIR UN MONTO MENOR A $ 1", "error");
-      } else if ((value[0].balancecc = parseFloat(value[0].balancecc) - numerico) < -descubierto) {
+      } else if ((value[0].balancecc = parseFloat(value[0].balancecc) - numerico) < descubierto) {
         swal(
           " ",
           "NO SE PUEDE TRANSFERIR, USTED SUPERA EL DESCUBIERTO DE $ " + descubierto,

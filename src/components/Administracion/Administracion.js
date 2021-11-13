@@ -11,9 +11,7 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router";
 import swal from "sweetalert";
-import {
-  tExterna,
-} from "../../controller/miAppExterno.controller";
+import { tExterna } from "../../controller/miAppExterno.controller";
 
 //importo
 import {
@@ -230,47 +228,39 @@ export default function Encuesta(props) {
           reportes[step].pagado = "1";
           updateComercio(reportes[step]);
         } else if (usuarioB === 201 && usuarioA !== 201) {
-
           {
-            usuarioB.then(
-              (valueE) => {
-                const account_origen = valueE[0].cbu;
-                const account_destino = usuarioA.cbu;
-                const amount = reportes[step].importe;
+            usuarioB.then((valueE) => {
+              const account_origen = valueE[0].cbu;
+              const account_destino = usuarioA.cbu;
+              const amount = reportes[step].importe;
 
-                tExterna(account_origen, account_destino, amount).then(
-                  (value) => {
-                    if (value == 200) {
-                      const numerico = parseFloat(amount);
-                      valueE[0].balanceca =
-                        numerico - parseFloat(valueE[0].balanceca);
+              tExterna(account_origen, account_destino, amount).then(
+                (value) => {
+                  if (value == 200) {
+                    const numerico = parseFloat(amount);
+                    valueE[0].balanceca =
+                      numerico - parseFloat(valueE[0].balanceca);
 
-                      const importeCA = valueE[0].balanceca;
-                      const importeCC = valueE[0].balancecc;
-                      updateUsuario(value[0]).then((valueE) => {});
-                      const tipomovimientoC =
-            "Pago a Comercios - " + reportes[step].descripcion;
-                      GeneroMovimiento(
-                        valueE[0].usuario,
-                        tipomovimientoC,
-                        numerico,
-                        importeCA,
-                        importeCC
-                      );
-                      swal(
-                        " ",
-                        "TRANSFERENCIA REALIZADA CON ÉXITO",
-                        "success"
-                      );
-                    } else {
-                      swal(" ", "USUARIO INEXISTENTE/ERRONEO", "error");
-                    }
+                    const importeCA = valueE[0].balanceca;
+                    const importeCC = valueE[0].balancecc;
+                    updateUsuario(value[0]).then((valueE) => {});
+                    const tipomovimientoC =
+                      "Pago a Comercios - " + reportes[step].descripcion;
+                    GeneroMovimiento(
+                      valueE[0].usuario,
+                      tipomovimientoC,
+                      numerico,
+                      importeCA,
+                      importeCC
+                    );
+                    swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
+                  } else {
+                    swal(" ", "USUARIO INEXISTENTE/ERRONEO", "error");
                   }
-                );
-              }
-            );
+                }
+              );
+            });
           }
-
         }
       } else {
         console.log("Hay errores en algunos campos");
@@ -296,7 +286,7 @@ export default function Encuesta(props) {
         reportes[step].estado !== "Pago total" &&
         reportes[step].estado !== "Pago parcial" &&
         reportes[step].debito == "1" &&
-        Date.parse(reportes[step].fechaVencimiento) >= date
+        Date.parse(reportes[step].fechaVencimiento) <= date
       ) {
         let usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
         let usuarioA = await getUsuarioCuit(reportes[step].cuit);

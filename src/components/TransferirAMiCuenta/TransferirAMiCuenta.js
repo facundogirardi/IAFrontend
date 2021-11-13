@@ -74,7 +74,7 @@ export default function Encuesta(props) {
   const [destino, setDestino] = React.useState("");
   const [valor, setValor] = React.useState("");
   const [tipomovimiento, setTipomovimiento] = React.useState(
-    "Transferencia por Cajero Automatico"
+    "Transferencia por nivelacion de cuenta"
   );
   const [reportes1, setReportes1] = useState([]);
   const handleValor = (event) => {
@@ -154,7 +154,7 @@ export default function Encuesta(props) {
     
       if (numerico < 1) {
         swal(" ", "NO SE PUEDE TRANSFERIR UN MONTO MENOR A $ 1", "error");
-      } else if ((value[0].balancecc = parseFloat(value[0].balancecc) - numerico) < -descubierto) {
+      } else if ((value[0].balancecc = parseFloat(value[0].balancecc) - numerico) < descubierto) {
         swal(
           " ",
           "NO SE PUEDE TRANSFERIR, USTED SUPERA EL MONTO DISPONIBLE",

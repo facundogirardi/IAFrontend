@@ -50,7 +50,8 @@ export default function () {
         }
       });
     }
-    if (getLogin.rdo === 4) {
+  
+    if (getLogin.rdo === 11) {
       swal(" ", "USUARIO NO HABILITADO", "error");
     } else {
       if (getLogin.rdo !== 3) {

@@ -190,7 +190,7 @@ export default function Encuesta(props) {
           swal(" ", "NO SE PUEDE PAGAR CON UN MONTO MENOR A $ 1", "error");
         } else if (parseFloat(reportes.importe) - numerico < 0) {
           swal(" ", "EL MONTO INGRESADO ES SUPERIOR AL INDICADO", "error");
-        } else if (parseFloat(value[0].balancecc) - numerico < -descubierto) {
+        } else if (parseFloat(value[0].balancecc) - numerico < descubierto) {
           swal(" ", "NO POSEE DINERO DISPONIBLE", "info");
         } else {
           value[0].balancecc = parseFloat(value[0].balancecc) - numerico;

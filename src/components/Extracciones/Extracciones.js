@@ -104,7 +104,7 @@ export default function Encuesta(props) {
         if (numerico < 1) {
           swal(" ", "NO SE PUEDE EXTRAER UN MONTO MENOR A $ 1", "error");
         } else if (parseFloat(value[0].balanceca) - numerico < 0) {
-          if (parseFloat(value[0].balancecc) - numerico < -descubierto) {
+          if (parseFloat(value[0].balancecc) - numerico < descubierto) {
             swal(
               " ",
               "NO SE PUEDE EXTRAER, USTED SUPERA EL DESCUBIERTO DE $ " +
@@ -285,7 +285,7 @@ export default function Encuesta(props) {
                 <TextField
                   required
                   id="Origen"
-                  label="Origen"
+                  label="CBU Origen"
                   inputProps={{
                     onChange: (event) => handleOrigen(event),
                   }}

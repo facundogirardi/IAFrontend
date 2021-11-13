@@ -25,9 +25,7 @@ import {
   getUsuarioCBUCC,
   getMantenimientoClave,
 } from "../../controller/miApp.controller";
-import {
-  tExterna,
-} from "../../controller/miAppExterno.controller";
+import { tExterna } from "../../controller/miAppExterno.controller";
 
 const useStylesGrid = makeStyles((theme) => ({
   paper: {
@@ -123,6 +121,7 @@ export default function Encuesta(props) {
         } else {
           getUsuarioCBU(destino).then((valueU) => {
             if (valueU !== 201) {
+              console.log("entro CA");
               const numerico = parseFloat(valor);
               valueU[0].balanceca = numerico + parseFloat(valueU[0].balanceca);
               const importeCA = valueU[0].balanceca;
@@ -151,25 +150,41 @@ export default function Encuesta(props) {
               );
               swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
             } else {
-              getUsuarioCBUCC(destino).then((value) => {
-                if (value !== 201) {
+              getUsuarioCBUCC(destino).then((valueU) => {
+                if (valueU !== 201) {
                   const numerico = parseFloat(valor);
-                  value[0].balancecc =
-                    numerico + parseFloat(value[0].balancecc);
-                  const importeCA = value[0].balanceca;
-                  const importeCC = value[0].balancecc;
-                  updateUsuario(value[0]).then((value) => {});
+                  valueU[0].balancecc =
+                    numerico + parseFloat(valueU[0].balancecc);
+                  const importeCA = valueU[0].balanceca;
+                  const importeCC = valueU[0].balancecc;
+                  updateUsuario(valueU[0]).then((value) => {});
                   GeneroMovimiento(
-                    value[0].usuario,
+                    valueU[0].usuario,
                     tipomovimiento,
                     numerico,
                     importeCA,
                     importeCC
                   );
+
+                  value[0].balanceca = parseFloat(
+                    value[0].balanceca - numerico
+                  );
+                  const importeCA1 = value[0].balanceca;
+                  const importeCC1 = value[0].balancecc;
+                  updateUsuario(value[0]).then((value) => {});
+                  GeneroMovimiento(
+                    value[0].usuario,
+                    tipomovimiento,
+                    numerico,
+                    importeCA1,
+                    importeCC1
+                  );
+
                   swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
                 } else {
                   getUsuarioUsuario(window.localStorage.getItem("name")).then(
                     (valueE) => {
+                      console.log("entro EX");
                       const account_origen = valueE[0].cbu;
                       const account_destino = destino;
                       const amount = numerico;
@@ -210,7 +225,7 @@ export default function Encuesta(props) {
 
           setTimeout(() => {
             history.push({
-              pathname: "/HomeCA", //paso el usuario temporalmente
+              pathname: "/HomeHB", //paso el usuario temporalmente
             });
           }, 1000);
         }
@@ -230,7 +245,7 @@ export default function Encuesta(props) {
           getUsuarioCBU(destino).then((valueU) => {
             if (valueU !== 201) {
               const numerico = parseFloat(valor);
-              valueU[0].balancecc = numerico + parseFloat(valueU[0].balancecc);
+              valueU[0].balanceca = numerico + parseFloat(valueU[0].balanceca);
               const importeCA = valueU[0].balanceca;
               const importeCC = valueU[0].balancecc;
               updateUsuario(valueU[0]).then((value) => {});
@@ -258,20 +273,35 @@ export default function Encuesta(props) {
               );
               swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
             } else {
-              getUsuarioCBUCC(destino).then((value) => {
-                if (value !== 201) {
+              getUsuarioCBUCC(destino).then((valueU) => {
+                if (valueU !== 201) {
+                  console.log("entro CC");
                   const numerico = parseFloat(valor);
-                  value[0].balancecc =
-                    numerico + parseFloat(value[0].balancecc);
-                  const importeCA = value[0].balanceca;
-                  const importeCC = value[0].balancecc;
+                  valueU[0].balancecc =
+                    numerico + parseFloat(valueU[0].balancecc);
+                  const importeCA = valueU[0].balanceca;
+                  const importeCC = valueU[0].balancecc;
+                  updateUsuario(valueU[0]).then((value) => {});
+                  GeneroMovimiento(
+                    valueU[0].usuario,
+                    tipomovimiento,
+                    numerico,
+                    importeCA,
+                    importeCC
+                  );
+
+                  value[0].balancecc = parseFloat(
+                    value[0].balancecc - numerico
+                  );
+                  const importeCA1 = value[0].balanceca;
+                  const importeCC1 = value[0].balancecc;
                   updateUsuario(value[0]).then((value) => {});
                   GeneroMovimiento(
                     value[0].usuario,
                     tipomovimiento,
                     numerico,
-                    importeCA,
-                    importeCC
+                    importeCA1,
+                    importeCC1
                   );
                   swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
                 } else {
@@ -317,7 +347,7 @@ export default function Encuesta(props) {
 
           setTimeout(() => {
             history.push({
-              pathname: "/HomeCA", //paso el usuario temporalmente
+              pathname: "/HomeHB", //paso el usuario temporalmente
             });
           }, 1000);
         }

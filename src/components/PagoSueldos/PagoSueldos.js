@@ -390,11 +390,11 @@ export default function Encuesta(props) {
               >
                 CONFIRMAR
               </Button>
-              <br />
+              
               <br></br>
-              <Button variant="contained" color="Primary" onClick={BuscoCBU}>
+           {/*    <Button variant="contained" color="Primary" onClick={BuscoCBU}>
                 EFECTUAR PAGO DE SUELDOS
-              </Button>
+             </Button> */}
               <br />
             </center>
           </Grid>
