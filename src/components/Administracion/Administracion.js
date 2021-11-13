@@ -364,69 +364,6 @@ export default function Encuesta(props) {
     swal(" ", "Debitos automaticos efectuados", "success");
   };
 
-  // CLearing Bancario
-
-  setInterval(function () {
-    const validarClearing = async function () {
-      const reportes = await getClearings();
-      const cantidad = reportes.length;
-
-      for (let step = 0; step < cantidad; step++) {
-        if (reportes[step].pagado == "0") {
-          const usuarioB = await getUsuarioCBU(reportes[step].cbuUsuarioD);
-          const usuarioA = await getUsuarioCBU(reportes[step].cbuPropio);
-
-          if (usuarioB !== 201 && usuarioA !== 201) {
-            reportes[step].pagado = "1";
-            updateClearing(reportes[step]);
-
-            console.log("B", usuarioB[0].balanceca, reportes[step].importe);
-            usuarioB[0].balanceca =
-              parseFloat(usuarioB[0].balanceca) +
-              parseFloat(reportes[step].importe);
-            updateUsuario(usuarioB[0]);
-            const importeM1 = +reportes[step].importe;
-            const usuarioM1 = usuarioB[0].usuario;
-            const importeCAM1 = usuarioB[0].balanceca;
-
-            const tipomovimientoM1 =
-              "Transferencia Externa - " + reportes[step].descripcion;
-            const importeCCM1 = usuarioB[0].balancecc;
-            GeneroMovimiento(
-              usuarioM1,
-              tipomovimientoM1,
-              importeM1,
-              importeCAM1,
-              importeCCM1
-            );
-
-            console.log("A", usuarioA[0].balanceca, reportes[step].importe);
-            usuarioA[0].balanceca =
-              parseFloat(usuarioA[0].balanceca) -
-              parseFloat(reportes[step].importe);
-
-            const importeM = -reportes[step].importe;
-            const usuarioM = usuarioA[0].usuario;
-            const importeCAM = usuarioA[0].balanceca;
-
-            const tipomovimientoM =
-              "Transferencia Externa - " + reportes[step].descripcion;
-            const importeCCM = usuarioA[0].balancecc;
-            GeneroMovimiento(
-              usuarioM,
-              tipomovimientoM,
-              importeM,
-              importeCAM,
-              importeCCM
-            );
-            updateUsuario(usuarioA[0]);
-          }
-        } else {
-        }
-      }
-    };
-  }, 1000);
-
   const history = useHistory();
 
   return (
