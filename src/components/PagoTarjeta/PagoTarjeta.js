@@ -17,16 +17,13 @@ import InputLabel from "@material-ui/core/InputLabel";
 import swal from "sweetalert";
 //importo
 import {
-  getEmpresasID,
   GeneroMovimiento,
   getUsuarioCuit,
   updateUsuario,
-  updateEmpresa,
   getUsuarioUsuario,
   getMantenimientoClave,
-  getTarjetaCUIT,
   getTarjetaCodigo,
-  updateTarjeta
+  updateTarjeta,
 } from "../../controller/miApp.controller";
 
 const useStylesGrid = makeStyles((theme) => ({
@@ -69,15 +66,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Encuesta(props) {
-  const clase5 = useStylesGrid(); 
+  const clase5 = useStylesGrid();
   const [reportes, setReportes] = useState([]);
   const [reportesDos, setReportesDos] = useState([]);
   const [usuarioB, setUsuarioB] = useState([]);
   const [valor, setValor] = React.useState("");
   const [origen, setOrigen] = React.useState("");
-  const [tipomovimiento, setTipomovimiento] = React.useState(
-    "Pago de Tarjeta - "
-  );
+  const [tipomovimiento, setTipomovimiento] =
+    React.useState("Pago de Tarjeta - ");
   const [reportes1, setReportes1] = useState([]);
   useEffect(() => {
     getReporte(props.match.params.id);
@@ -119,7 +115,7 @@ export default function Encuesta(props) {
               importe = parseFloat(reportes.importe) - numerico;
             } else {
               estadoPago = "Pago total";
-              pagado= "1";
+              pagado = "1";
               importe = parseFloat(reportes.importe) - numerico;
             }
             const usuario = value[0].usuario;
@@ -134,40 +130,39 @@ export default function Encuesta(props) {
                 importeCA,
                 importeCC
               );
-            const codigotransaccion = reportes.codigotransaccion;
-            const cuit = reportes.cuit;
-            const cuitEmpresa = reportes.cuitEmpresa;
-     
+              const codigotransaccion = reportes.codigotransaccion;
+              const cuit = reportes.cuit;
+              const cuitEmpresa = reportes.cuitEmpresa;
 
-            const fechaVencimiento = reportes.fechaVencimiento;
-            const descripcion = reportes.descripcion;
- 
-            updateTarjeta(
-              codigotransaccion,
-              cuitEmpresa,
-              importe,
-              descripcion,
-              fechaVencimiento,
-              pagado,
-              cuit
-            );
+              const fechaVencimiento = reportes.fechaVencimiento;
+              const descripcion = reportes.descripcion;
 
-            getUsuarioCuit(reportes.cuitEmpresa).then((value2) => {
-              value2[0].balanceca =
-              parseFloat(importePagado) + parseFloat(value2[0].balanceca);
-              importe = importePagado;
-              const importeCA = value2[0].balanceca;
-              const importeCC = value2[0].balancecc;
-              updateUsuario(value2[0]).then((value) => {});
-              GeneroMovimiento(
-                value2[0].usuario,
-                tipomovimiento + estadoPago + "-" + cuit,
+              updateTarjeta(
+                codigotransaccion,
+                cuitEmpresa,
                 importe,
-                importeCA,
-                importeCC
+                descripcion,
+                fechaVencimiento,
+                pagado,
+                cuit
               );
-            });
-   
+
+              getUsuarioCuit(reportes.cuitEmpresa).then((value2) => {
+                value2[0].balanceca =
+                  parseFloat(importePagado) + parseFloat(value2[0].balanceca);
+                importe = importePagado;
+                const importeCA = value2[0].balanceca;
+                const importeCC = value2[0].balancecc;
+                updateUsuario(value2[0]).then((value) => {});
+                GeneroMovimiento(
+                  value2[0].usuario,
+                  tipomovimiento + estadoPago + "-" + cuit,
+                  importe,
+                  importeCA,
+                  importeCC
+                );
+              });
+
               swal(" ", "PAGO DE TARJETA EXITOSO", "success");
               setTimeout(() => {
                 window.location.reload(true);
@@ -177,43 +172,43 @@ export default function Encuesta(props) {
         }
       });
     } else {
-
       const reportes1 = await getMantenimientoClave("1");
-        setReportes1(reportes1[0]);
+      setReportes1(reportes1[0]);
 
       getUsuarioUsuario(window.localStorage.getItem("name")).then((value) => {
-
-
-        if(value[0].usuariotipo === 1){
-          descubierto=reportes1[0].descubiertoF;
-         }else{
-           descubierto=reportes1[0].descubiertoJ;
-         }
+        if (value[0].usuariotipo === 1) {
+          descubierto = reportes1[0].descubiertoF;
+        } else {
+          descubierto = reportes1[0].descubiertoJ;
+        }
 
         if (numerico < 1) {
           swal(" ", "NO SE PUEDE PAGAR CON UN MONTO MENOR A $ 1", "error");
-        } else if ( parseFloat(reportes.importe) -  parseFloat(numerico) < 0) {
+        } else if (parseFloat(reportes.importe) - parseFloat(numerico) < 0) {
           swal(" ", "EL MONTO INGRESADO ES SUPERIOR AL INDICADO", "error");
-        } else if ( parseFloat(value[0].balancecc) -  parseFloat(numerico) < descubierto) {
+        } else if (
+          parseFloat(value[0].balancecc) - parseFloat(numerico) <
+          descubierto
+        ) {
           swal(" ", "NO POSEE DINERO DISPONIBLE", "info");
         } else {
-          value[0].balancecc = parseFloat(value[0].balancecc) -  parseFloat(numerico);
+          value[0].balancecc =
+            parseFloat(value[0].balancecc) - parseFloat(numerico);
 
-          let importe =  parseFloat(reportes.importe);
-          let importePagado =  parseFloat(numerico);
-          if (parseFloat(reportes.importe) -  parseFloat(numerico) > 0) {
+          let importe = parseFloat(reportes.importe);
+          let importePagado = parseFloat(numerico);
+          if (parseFloat(reportes.importe) - parseFloat(numerico) > 0) {
             estadoPago = "Pago parcial";
-            importe =  parseFloat(reportes.importe) -  parseFloat(numerico);
+            importe = parseFloat(reportes.importe) - parseFloat(numerico);
           } else {
             estadoPago = "Pago total";
-            pagado= "1";
-            importe =  parseFloat(reportes.importe) -  parseFloat(numerico);
+            pagado = "1";
+            importe = parseFloat(reportes.importe) - parseFloat(numerico);
           }
           const usuario = value[0].usuario;
 
           const importeCA = value[0].balanceca;
           const importeCC = value[0].balancecc;
-
 
           updateUsuario(value[0]).then((value) => {
             GeneroMovimiento(
@@ -227,9 +222,8 @@ export default function Encuesta(props) {
             const codigotransaccion = reportes.codigotransaccion;
             const cuit = reportes.cuit;
             const cuitEmpresa = reportes.cuitEmpresa;
-    
+
             const descripcion = reportes.descripcion;
-          
 
             const fechaVencimiento = reportes.fechaVencimiento;
             updateTarjeta(
@@ -240,11 +234,11 @@ export default function Encuesta(props) {
               fechaVencimiento,
               pagado,
               cuit
-            ); 
+            );
 
             getUsuarioCuit(reportes.cuitEmpresa).then((value2) => {
               value2[0].balanceca =
-              parseFloat(importePagado) + parseFloat(value2[0].balanceca);
+                parseFloat(importePagado) + parseFloat(value2[0].balanceca);
               importe = importePagado;
               const importeCA = value2[0].balanceca;
               const importeCC = value2[0].balancecc;
@@ -258,7 +252,6 @@ export default function Encuesta(props) {
               );
             });
 
-  
             swal(" ", "PAGO DE TARJETA EXITOSO", "success");
             setTimeout(() => {
               window.location.reload(true);
@@ -303,7 +296,9 @@ export default function Encuesta(props) {
                 disabled
                 variant="outlined"
                 value={reportes.cuit}
-              /> <br /><br />
+              />{" "}
+              <br />
+              <br />
               <TextField
                 id="outlined-helperText"
                 label="Fecha de vencimiento"
@@ -325,7 +320,7 @@ export default function Encuesta(props) {
               <br />
               <br />
               <TextField
-               style={{ width: "300px" }}
+                style={{ width: "300px" }}
                 id="outlined-helperText"
                 label="Descripcion"
                 defaultValue="Default Value"

@@ -1,5 +1,5 @@
-const urlApi = "http://localhost:4000/";
-//const urlApi = "https://iabackend.herokuapp.com/";
+//const urlApi = "http://localhost:4000/";
+const urlApi = "https://iabackend.herokuapp.com/";
 console.log("url", urlApi);
 
 const urlWebServices = {
@@ -23,6 +23,7 @@ const urlWebServices = {
   getEmpresaCUIT: urlApi + "api/users/getEmpresaCUIT",
   getEmpresaPAGO: urlApi + "api/users/getEmpresaPAGO",
   updateEmpresa: urlApi + "api/users/updateEmpresa",
+  updateEmpresaM: urlApi + "api/users/updateEmpresaM",
   getEmpresasID: urlApi + "api/users/getEmpresasID",
   getMantenimientoClave: urlApi + "api/users/getMantenimientoClave",
   getMantenimientos: urlApi + "api/users/getMantenimientos",

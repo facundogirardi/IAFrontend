@@ -935,6 +935,53 @@ export const updateEmpresa = async function (
   }
 };
 
+// Acutualizo usuarios cbu CA
+export const updateEmpresaM = async function ({
+  nombre,
+  codigopago,
+  cuitEmpresa,
+  importe,
+  descripcion,
+  fechaVencimiento,
+  estado,
+  cuit,
+  debito
+}) { 
+  let url = urlWebServices.updateEmpresaM;
+  const formData = new URLSearchParams();
+  formData.append("nombre", nombre);
+  formData.append("codigopago", codigopago);
+  formData.append("cuitEmpresa", cuitEmpresa);
+  formData.append("importe", importe);
+  formData.append("descripcion", descripcion);
+  formData.append("fechaVencimiento", fechaVencimiento);
+  formData.append("estado", estado);
+  formData.append("cuit", cuit);
+  formData.append("debito", debito);
+
+  try {
+    let response = await fetch(url, {
+      method: "PUT", // or 'PUT'
+      mode: "cors",
+      headers: {
+        Accept: "application/x-www-form-urlencoded",
+        Origin: "http://localhost:3000",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formData,
+    });
+
+    if (response.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log("error", error);
+    return false;
+  }
+};
+
 // Recupero Empresas
 export const getPagoCUITEmpresa = async function () {
   let url = urlWebServices.getPagoCUITEmpresa;

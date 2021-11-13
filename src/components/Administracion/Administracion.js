@@ -21,7 +21,7 @@ import {
   getUsuarioCBU,
   getEmpresa,
   GeneroMovimiento,
-  updateEmpresa,
+  updateEmpresaM,
   getUsuarioCuit,
   getComercios,
   updateComercio,
@@ -345,7 +345,7 @@ export default function Encuesta(props) {
           );
 
           reportes[step].estado = "Pago total";
-          updateEmpresa(reportes[step]);
+          updateEmpresaM(reportes[step]);
         }
       } else {
         console.log("Hay errores en algunos campos");
