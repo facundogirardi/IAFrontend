@@ -889,7 +889,7 @@ export const updateUserP = async function ({
 };
 
 // Acutualizo usuarios cbu CA
-export const updateEmpresa = async function ({
+export const updateEmpresa = async function (
   nombre,
   codigopago,
   cuitEmpresa,
@@ -898,16 +898,16 @@ export const updateEmpresa = async function ({
   fechaVencimiento,
   estado,
   cuit,
-  debito,
-}) {
+  debito
+) { 
   let url = urlWebServices.updateEmpresa;
   const formData = new URLSearchParams();
   formData.append("nombre", nombre);
   formData.append("codigopago", codigopago);
+  formData.append("cuitEmpresa", cuitEmpresa);
   formData.append("importe", importe);
   formData.append("descripcion", descripcion);
   formData.append("fechaVencimiento", fechaVencimiento);
-  formData.append("cuitEmpresa", cuitEmpresa);
   formData.append("estado", estado);
   formData.append("cuit", cuit);
   formData.append("debito", debito);
@@ -1407,7 +1407,7 @@ export const updateMantenimiento = async function (
   mantenimientoF,
   mantenimientoJ,
   interes
-) {
+) { 
   let url = urlWebServices.updateMantenimiento;
   const formData = new URLSearchParams();
   formData.append("clave", clave);

@@ -191,7 +191,7 @@ export default function Encuesta(props) {
           swal(" ", "EL MONTO INGRESADO ES SUPERIOR AL INDICADO", "error");
         } else if (
           parseFloat(value[0].balancecc) - parseFloat(numerico) <
-           descubierto
+          descubierto
         ) {
           swal(" ", "NO POSEE DINERO DISPONIBLE", "info");
         } else {
