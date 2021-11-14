@@ -77,10 +77,14 @@ const useStyles = makeStyles((theme) => ({
 export default function Encuesta(props) {
   const clase5 = useStylesGrid();
 
+  const sleep = (milliseconds) => {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  };
+
   const Sueldo = () => {
     setInterval(function () {
       validarSueldo();
-    }, 172800000);
+    }, 86400000);
     validarSueldo();
   };
 
@@ -91,6 +95,7 @@ export default function Encuesta(props) {
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
+      await sleep(5000);
       if (
         reportes[step].pagado == "0" &&
         Date.parse(reportes[step].fechaPago) <= date
@@ -154,7 +159,7 @@ export default function Encuesta(props) {
   const PagoTarjetaComercio = () => {
     setInterval(function () {
       validarPagoTarjetaComercio();
-    }, 172800000);
+    }, 86400000);
     validarPagoTarjetaComercio();
   };
 
@@ -165,6 +170,7 @@ export default function Encuesta(props) {
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
+      await sleep(5000);
       if (
         reportes[step].pagado == "0" &&
         Date.parse(reportes[step].fechaPago) <= date
@@ -184,7 +190,7 @@ export default function Encuesta(props) {
           const importeCAM1 = usuarioB[0].balanceca;
 
           const tipomovimientoM1 =
-            "Debito Automatico - " + reportes[step].descripcion;
+            "Pago a comercios - " + reportes[step].descripcion;
           const importeCCM1 = usuarioB[0].balancecc;
           GeneroMovimiento(
             usuarioM1,
@@ -215,7 +221,7 @@ export default function Encuesta(props) {
           const importeCAM = usuarioA[0].balanceca;
 
           const tipomovimientoM =
-            "Debito Automatico - " + reportes[step].descripcion;
+            "Pago a comercios - " + reportes[step].descripcion;
           const importeCCM = usuarioA[0].balancecc;
           GeneroMovimiento(
             usuarioM,
@@ -234,31 +240,24 @@ export default function Encuesta(props) {
               const account_destino = usuarioA.cbu;
               const amount = reportes[step].importe;
 
-              tExterna(account_origen, account_destino, amount).then(
-                (value) => {
-                  if (value == 200) {
-                    const numerico = parseFloat(amount);
-                    valueE[0].balanceca =
-                      numerico - parseFloat(valueE[0].balanceca);
+              tExterna(account_origen, account_destino, amount);
 
-                    const importeCA = valueE[0].balanceca;
-                    const importeCC = valueE[0].balancecc;
-                    updateUsuario(value[0]).then((valueE) => {});
-                    const tipomovimientoC =
-                      "Pago a Comercios - " + reportes[step].descripcion;
-                    GeneroMovimiento(
-                      valueE[0].usuario,
-                      tipomovimientoC,
-                      numerico,
-                      importeCA,
-                      importeCC
-                    );
-                    swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
-                  } else {
-                    swal(" ", "USUARIO INEXISTENTE/ERRONEO", "error");
-                  }
-                }
+              const numerico = parseFloat(amount);
+              valueE[0].balanceca = numerico - parseFloat(valueE[0].balanceca);
+
+              const importeCA = valueE[0].balanceca;
+              const importeCC = valueE[0].balancecc;
+              updateUsuario(valueE[0]).then((valueE) => {});
+              const tipomovimientoC =
+                "Pago a comercios - " + reportes[step].descripcion;
+              GeneroMovimiento(
+                valueE[0].usuario,
+                tipomovimientoC,
+                numerico,
+                importeCA,
+                importeCC
               );
+              swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
             });
           }
         }
@@ -272,7 +271,7 @@ export default function Encuesta(props) {
   const Dau = () => {
     setInterval(function () {
       validarDau();
-    }, 172800000);
+    }, 86400000);
     validarDau();
   };
 
@@ -282,6 +281,7 @@ export default function Encuesta(props) {
     const cantidad = reportes.length;
     let date = new Date();
     for (let step = 0; step < cantidad; step++) {
+      await sleep(5000);
       if (
         reportes[step].estado !== "Pago total" &&
         reportes[step].estado !== "Pago parcial" &&
@@ -395,7 +395,7 @@ export default function Encuesta(props) {
                   {" "}
                   <Button color="primary">PAGO DE SUELDOS</Button>
                 </Link>
-               
+
                 <Link to={{ pathname: "/Empresa" }}>
                   {" "}
                   <Button color="primary">ALTA DE CUPON</Button>
@@ -427,7 +427,8 @@ export default function Encuesta(props) {
                 </Link>
                 <br />
                 <br />
-                <h5>SE EJECUTAN CADA 48HS O PULSANDO EL BOTON</h5>
+                <br />
+                <h6>SE EJECUTAN CADA 24HS/PULSANDO EL BOTON</h6>
                 <br />
                 <Button variant="contained" color="Primary" onClick={Sueldo}>
                   EFECTUAR PAGO DE SUELDOS
