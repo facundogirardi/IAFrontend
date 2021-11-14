@@ -185,29 +185,6 @@ export default function Encuesta(props) {
                       const amount = numerico;
 
                       tExterna(account_origen, account_destino, amount);
-                      if (value == 200) {
-                        const numerico = parseFloat(valor);
-                        valueE[0].balanceca =
-                          numerico - parseFloat(valueE[0].balanceca);
-
-                        const importeCA = valueE[0].balanceca;
-                        const importeCC = valueE[0].balancecc;
-                        updateUsuario(value[0]).then((valueE) => {});
-                        GeneroMovimiento(
-                          valueE[0].usuario,
-                          tipomovimiento,
-                          numerico,
-                          importeCA,
-                          importeCC
-                        );
-                        swal(
-                          " ",
-                          "TRANSFERENCIA REALIZADA CON ÉXITO",
-                          "success"
-                        );
-                      } else {
-                        swal(" ", "USUARIO INEXISTENTE/ERRONEO", "error");
-                      }
                     }
                   );
                 }
@@ -304,30 +281,6 @@ export default function Encuesta(props) {
                       const amount = numerico;
 
                       tExterna(account_origen, account_destino, amount);
-
-                      if (value == 200) {
-                        const numerico = parseFloat(valor);
-                        valueE[0].balancecc =
-                          numerico - parseFloat(valueE[0].balancecc);
-
-                        const importeCA = valueE[0].balanceca;
-                        const importeCC = valueE[0].balancecc;
-                        updateUsuario(valueE[0]).then((valueE) => {});
-                        GeneroMovimiento(
-                          valueE[0].usuario,
-                          tipomovimiento,
-                          numerico,
-                          importeCA,
-                          importeCC
-                        );
-                        swal(
-                          " ",
-                          "TRANSFERENCIA REALIZADA CON ÉXITO",
-                          "success"
-                        );
-                      } else {
-                        swal(" ", "USUARIO INEXISTENTE/ERRONEO", "error");
-                      }
                     }
                   );
                 }

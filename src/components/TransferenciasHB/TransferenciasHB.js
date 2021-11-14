@@ -121,7 +121,7 @@ export default function Encuesta(props) {
         } else {
           getUsuarioCBU(destino).then((valueU) => {
             if (valueU !== 201) {
-              console.log("entro CA");
+   
               const numerico = parseFloat(valor);
               valueU[0].balanceca = numerico + parseFloat(valueU[0].balanceca);
               const importeCA = valueU[0].balanceca;
@@ -184,35 +184,12 @@ export default function Encuesta(props) {
                 } else {
                   getUsuarioUsuario(window.localStorage.getItem("name")).then(
                     (valueE) => {
-                      console.log("entro EX");
+            
                       const account_origen = valueE[0].cbu;
                       const account_destino = destino;
                       const amount = numerico;
 
                       tExterna(account_origen, account_destino, amount);
-                      if (value == 200) {
-                        const numerico = parseFloat(valor);
-                        valueE[0].balanceca =
-                          numerico - parseFloat(valueE[0].balanceca);
-
-                        const importeCA = valueE[0].balanceca;
-                        const importeCC = valueE[0].balancecc;
-                        updateUsuario(valueE[0]).then((valueE) => {});
-                        GeneroMovimiento(
-                          valueE[0].usuario,
-                          tipomovimiento,
-                          numerico,
-                          importeCA,
-                          importeCC
-                        );
-                        swal(
-                          " ",
-                          "TRANSFERENCIA REALIZADA CON ÉXITO",
-                          "success"
-                        );
-                      } else {
-                        swal(" ", "USUARIO INEXISTENTE/ERRONEO", "error");
-                      }
                     }
                   );
                 }
@@ -272,7 +249,6 @@ export default function Encuesta(props) {
             } else {
               getUsuarioCBUCC(destino).then((valueU) => {
                 if (valueU !== 201) {
-                  console.log("entro CC");
                   const numerico = parseFloat(valor);
                   valueU[0].balancecc =
                     numerico + parseFloat(valueU[0].balancecc);
@@ -309,29 +285,6 @@ export default function Encuesta(props) {
                       const amount = numerico;
 
                       tExterna(account_origen, account_destino, amount);
-                      if (value == 200) {
-                        const numerico = parseFloat(valor);
-                        valueE[0].balancecc =
-                          numerico - parseFloat(valueE[0].balancecc);
-
-                        const importeCA = valueE[0].balanceca;
-                        const importeCC = valueE[0].balancecc;
-                        updateUsuario(value[0]).then((valueE) => {});
-                        GeneroMovimiento(
-                          valueE[0].usuario,
-                          tipomovimiento,
-                          numerico,
-                          importeCA,
-                          importeCC
-                        );
-                        swal(
-                          " ",
-                          "TRANSFERENCIA REALIZADA CON ÉXITO",
-                          "success"
-                        );
-                      } else {
-                        swal(" ", "USUARIO INEXISTENTE/ERRONEO", "error");
-                      }
                     }
                   );
                 }
