@@ -100,7 +100,7 @@ today = yyyy + '-' + mm + '-' + dd ;
 
     for (let step = 0; step < cantidad; step++) {
       await sleep(5000);
-      var comparoFecha = today.localeCompare(reportes[step].fechaVencimiento);
+      var comparoFecha = today.localeCompare(reportes[step].fechaPago);
       if (
         reportes[step].pagado == "0" &&
         comparoFecha === 1
@@ -180,7 +180,7 @@ today = yyyy + '-' + mm + '-' + dd ;
 
     for (let step = 0; step < cantidad; step++) {
       await sleep(5000);
-      var comparoFecha = today.localeCompare(reportes[step].fechaVencimiento);
+      var comparoFecha = today.localeCompare(reportes[step].fechaPago);
       if (
         reportes[step].pagado == "0" && comparoFecha === 1
       ) {
