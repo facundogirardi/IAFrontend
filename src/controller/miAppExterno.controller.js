@@ -14,7 +14,8 @@ import swal from "sweetalert";
 export const tExterna = async function (
   account_origen,
   account_destino,
-  amount
+  amount,
+  tipoCuenta
 ) {
   var https = require("follow-redirects").https;
 
@@ -45,7 +46,10 @@ export const tExterna = async function (
         getUsuarioUsuario(window.localStorage.getItem("name")).then(
           (valueE) => {
             const numerico = parseFloat(amount);
-            valueE[0].balanceca = parseFloat(valueE[0].balanceca) - numerico;
+            if(tipoCuenta==="CA"){
+            valueE[0].balanceca = parseFloat(valueE[0].balanceca) - numerico;}else{
+              valueE[0].balancecc = parseFloat(valueE[0].balancecc) - numerico;
+            }
 
             const importeCA = valueE[0].balanceca;
             const importeCC = valueE[0].balancecc;
@@ -63,14 +67,14 @@ export const tExterna = async function (
         );
 
         swal(" ", "Transferencia exitosa", "success");
+      } else if (
+        body.toString() == '{"transfer_error":"La cuenta de destino no existe"}'
+      )  {
+        swal(" ", "La cuenta de destino no existe", "error");
       } else {
         swal(" ", "Error en transferencia", "error");
       }
-      if (
-        body.toString() == '{"transfer_error":"La cuenta de destino no existe"}'
-      ) {
-        swal(" ", "La cuenta de destino no existe", "error");
-      }
+      
     });
 
     res.on("error", function (error) {

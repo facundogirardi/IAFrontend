@@ -188,8 +188,9 @@ export default function Encuesta(props) {
                       const account_origen = valueE[0].cbu;
                       const account_destino = destino;
                       const amount = numerico;
-
-                      tExterna(account_origen, account_destino, amount);
+                      console.log("CA");
+                   
+                      tExterna(account_origen, account_destino, amount,"CA");
                     }
                   );
                 }
@@ -283,8 +284,9 @@ export default function Encuesta(props) {
                       const account_origen = valueE[0].cbuCC;
                       const account_destino = destino;
                       const amount = numerico;
-
-                      tExterna(account_origen, account_destino, amount);
+                      console.log("CC");
+                   
+                      tExterna(account_origen, account_destino, amount,"CC");
                     }
                   );
                 }
@@ -296,7 +298,7 @@ export default function Encuesta(props) {
             history.push({
               pathname: "/HomeHB", //paso el usuario temporalmente
             });
-          }, 1000);
+          }, 2000);
         }
       }
     });

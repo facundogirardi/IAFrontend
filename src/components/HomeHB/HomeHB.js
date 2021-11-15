@@ -62,6 +62,10 @@ export default function Encuesta(props) {
 
   const getReporte = async (id) => {
     if (window.localStorage.getItem("name") !== "") {
+      const sleep = (milliseconds) => {
+        return new Promise((resolve) => setTimeout(resolve, milliseconds));
+      };
+      await sleep(3000);
       const reportes = await getUsuarioUsuario(
         window.localStorage.getItem("name")
       );

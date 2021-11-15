@@ -183,8 +183,8 @@ export default function Encuesta(props) {
                       const account_origen = valueE[0].cbu;
                       const account_destino = destino;
                       const amount = numerico;
-
-                      tExterna(account_origen, account_destino, amount);
+                   
+                      tExterna(account_origen, account_destino, amount, "CA");
                     }
                   );
                 }
@@ -279,8 +279,8 @@ export default function Encuesta(props) {
                       const account_origen = valueE[0].cbuCC;
                       const account_destino = destino;
                       const amount = numerico;
-
-                      tExterna(account_origen, account_destino, amount);
+                     
+                      tExterna(account_origen, account_destino, amount, "CC");
                     }
                   );
                 }

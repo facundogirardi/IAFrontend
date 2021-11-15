@@ -234,7 +234,7 @@ export default function Encuesta(props) {
           reportes[step].pagado = "1";
           updateComercio(reportes[step]);
         } else if (usuarioB === 201 && usuarioA !== 201) {
-          {
+          
             usuarioB.then((valueE) => {
               const account_origen = valueE[0].cbu;
               const account_destino = usuarioA.cbu;
@@ -257,9 +257,9 @@ export default function Encuesta(props) {
                 importeCA,
                 importeCC
               );
-              swal(" ", "TRANSFERENCIA REALIZADA CON ÉXITO", "success");
+              swal(" ", "PAGOS REALIZADOS CON ÉXITO", "success");
             });
-          }
+          
         }
       } else {
         console.log("Hay errores en algunos campos");
@@ -346,8 +346,33 @@ export default function Encuesta(props) {
 
           reportes[step].estado = "Pago total";
           updateEmpresaM(reportes[step]);
+        } else if(usuarioB === 201 && usuarioA !== 201){
+          usuarioB.then((valueE) => {
+            const account_origen = valueE[0].cbu;
+            const account_destino = usuarioA.cbu;
+            const amount = reportes[step].importe;
+
+            tExterna(account_origen, account_destino, amount);
+
+            const numerico = parseFloat(amount);
+            valueE[0].balanceca = numerico - parseFloat(valueE[0].balanceca);
+
+            const importeCA = valueE[0].balanceca;
+            const importeCC = valueE[0].balancecc;
+            updateUsuario(valueE[0]).then((valueE) => {});
+            const tipomovimientoC =
+              "Pago a comercios - " + reportes[step].descripcion;
+            GeneroMovimiento(
+              valueE[0].usuario,
+              tipomovimientoC,
+              numerico,
+              importeCA,
+              importeCC
+            );
+            swal(" ", "DÉBITOS REALIZADOS CON ÉXITO", "success");
+          });
         }
-      } else {
+      }  else {
         console.log("Hay errores en algunos campos");
       }
     }
