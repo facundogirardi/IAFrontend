@@ -91,15 +91,20 @@ export default function Encuesta(props) {
   //Ejecuto el endopoint para validar el CBU & guardar el monto
   const validarSueldo = async function () {
     const reportes = await getSueldo();
-    let date = new Date();
+    var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = String(today.getFullYear());
+today = yyyy + '-' + mm + '-' + dd ;
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
       await sleep(5000);
+      var comparoFecha = today.localeCompare(reportes[step].fechaVencimiento);
       if (
         reportes[step].pagado == "0" &&
-        Date.parse(reportes[step].fechaPago) <= date
-      ) {
+        comparoFecha === 1
+      ) { 
         let usuarioB = await getUsuarioCBU(reportes[step].cbu);
         let usuarioA = await getUsuarioCBU(reportes[step].cbuEmpresa);
 
@@ -166,14 +171,18 @@ export default function Encuesta(props) {
   //Ejecuto el endopoint para validar el CBU & guardar el monto
   const validarPagoTarjetaComercio = async function () {
     const reportes = await getComercios();
-    let date = new Date();
+    var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = String(today.getFullYear());
+today = yyyy + '-' + mm + '-' + dd ;
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
       await sleep(5000);
+      var comparoFecha = today.localeCompare(reportes[step].fechaVencimiento);
       if (
-        reportes[step].pagado == "0" &&
-        Date.parse(reportes[step].fechaPago) <= date
+        reportes[step].pagado == "0" && comparoFecha === 1
       ) {
         let usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
         let usuarioA = await getUsuarioCuit(reportes[step].cuit);
@@ -279,14 +288,25 @@ export default function Encuesta(props) {
   const validarDau = async function () {
     const reportes = await getEmpresa();
     const cantidad = reportes.length;
-    let date = new Date();
+
+var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = String(today.getFullYear());
+today = yyyy + '-' + mm + '-' + dd ;
+
+console.log(today);
     for (let step = 0; step < cantidad; step++) {
       await sleep(5000);
+      var comparoFecha = today.localeCompare(reportes[step].fechaVencimiento);
+      console.log(today);
+      console.log(reportes[step].fechaVencimiento);
+      console.log(comparoFecha);
       if (
         reportes[step].estado !== "Pago total" &&
         reportes[step].estado !== "Pago parcial" &&
         reportes[step].debito == "1" &&
-        Date.parse(reportes[step].fechaVencimiento) <= date
+        comparoFecha === 1
       ) {
         let usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
         let usuarioA = await getUsuarioCuit(reportes[step].cuit);
