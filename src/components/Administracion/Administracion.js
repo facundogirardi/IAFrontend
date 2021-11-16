@@ -103,7 +103,7 @@ today = yyyy + '-' + mm + '-' + dd ;
       var comparoFecha = today.localeCompare(reportes[step].fechaPago);
       if (
         reportes[step].pagado == "0" &&
-        comparoFecha === 1
+        ( comparoFecha === 0 || comparoFecha === 1)
       ) { 
         let usuarioB = await getUsuarioCBU(reportes[step].cbu);
         let usuarioA = await getUsuarioCBU(reportes[step].cbuEmpresa);
@@ -182,7 +182,8 @@ today = yyyy + '-' + mm + '-' + dd ;
       await sleep(5000);
       var comparoFecha = today.localeCompare(reportes[step].fechaPago);
       if (
-        reportes[step].pagado == "0" && comparoFecha === 1
+        reportes[step].pagado == "0" && 
+        ( comparoFecha === 0 || comparoFecha === 1)
       ) {
         let usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
         let usuarioA = await getUsuarioCuit(reportes[step].cuit);
@@ -306,7 +307,7 @@ console.log(today);
         reportes[step].estado !== "Pago total" &&
         reportes[step].estado !== "Pago parcial" &&
         reportes[step].debito == "1" &&
-        comparoFecha === 1
+        ( comparoFecha === 0 || comparoFecha === 1)
       ) {
         let usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
         let usuarioA = await getUsuarioCuit(reportes[step].cuit);
