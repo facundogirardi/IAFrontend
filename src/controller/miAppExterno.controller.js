@@ -47,7 +47,7 @@ export const tExterna = async function (
           (valueE) => {
             const numerico = parseFloat(amount);
             if(tipoCuenta==="CA"){
-            valueE[0].balanceca = parseFloat(valueE[0].balanceca) - numerico;}else{
+            valueE[0].balanceca = parseFloat(valueE[0].balanceca) - numerico;}else if(tipoCuenta==="CC") {
               valueE[0].balancecc = parseFloat(valueE[0].balancecc) - numerico;
             }
 
