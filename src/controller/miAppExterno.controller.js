@@ -15,7 +15,8 @@ export const tExterna = async function (
   account_origen,
   account_destino,
   amount,
-  tipoCuenta
+  tipoCuenta,
+  origenT
 ) {
   var https = require("follow-redirects").https;
 
@@ -46,16 +47,23 @@ export const tExterna = async function (
         getUsuarioUsuario(window.localStorage.getItem("name")).then(
           (valueE) => {
             const numerico = parseFloat(amount);
-            if(tipoCuenta==="CA"){
-            valueE[0].balanceca = parseFloat(valueE[0].balanceca) - numerico;}else if(tipoCuenta==="CC") {
+            if (tipoCuenta === "CC") {
+              valueE[0].balanceca = parseFloat(valueE[0].balanceca) - numerico;
+            } else if (tipoCuenta === "CC") {
               valueE[0].balancecc = parseFloat(valueE[0].balancecc) - numerico;
             }
 
             const importeCA = valueE[0].balanceca;
             const importeCC = valueE[0].balancecc;
             updateUsuario(valueE[0]).then((valueE) => {});
-            const tipomovimiento =
-              "Transferencia a usuario externo - " + account_destino;
+            let tipomovimiento = 0;
+            if (origenT === "comercio") {
+              tipomovimiento = "Pago a comercio externo - " + account_destino;
+            } else {
+              tipomovimiento =
+                "Transferencia a usuario externo - " + account_destino;
+            }
+
             GeneroMovimiento(
               valueE[0].usuario,
               tipomovimiento,
@@ -69,12 +77,11 @@ export const tExterna = async function (
         swal(" ", "Transferencia exitosa", "success");
       } else if (
         body.toString() == '{"transfer_error":"La cuenta de destino no existe"}'
-      )  {
+      ) {
         swal(" ", "La cuenta de destino no existe", "error");
       } else {
         swal(" ", "Error en transferencia", "error");
       }
-      
     });
 
     res.on("error", function (error) {

@@ -92,18 +92,16 @@ export default function Encuesta(props) {
   const validarSueldo = async function () {
     const reportes = await getSueldo();
     var today = new Date();
-var dd = String(today.getDate()).padStart(2, '0');
-var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-var yyyy = String(today.getFullYear());
-today = yyyy + '-' + mm + '-' + dd ;
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = String(today.getFullYear());
+    today = yyyy + "-" + mm + "-" + dd;
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
       await sleep(5000);
       var comparoFecha = today.localeCompare(reportes[step].fechaPago);
-      if (
-        reportes[step].pagado == "0"
-      ) { 
+      if (reportes[step].pagado == "0") {
         let usuarioB = await getUsuarioCBU(reportes[step].cbu);
         let usuarioA = await getUsuarioCBU(reportes[step].cbuEmpresa);
 
@@ -171,18 +169,16 @@ today = yyyy + '-' + mm + '-' + dd ;
   const validarPagoTarjetaComercio = async function () {
     const reportes = await getComercios();
     var today = new Date();
-var dd = String(today.getDate()).padStart(2, '0');
-var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-var yyyy = String(today.getFullYear());
-today = yyyy + '-' + mm + '-' + dd ;
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = String(today.getFullYear());
+    today = yyyy + "-" + mm + "-" + dd;
     const cantidad = reportes.length;
 
     for (let step = 0; step < cantidad; step++) {
       await sleep(5000);
       var comparoFecha = today.localeCompare(reportes[step].fechaPago);
-      if (
-        reportes[step].pagado == "0" 
-      ) {
+      if (reportes[step].pagado == "0") {
         let usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
         let usuarioA = await getUsuarioCuit(reportes[step].cuit);
 
@@ -193,7 +189,7 @@ today = yyyy + '-' + mm + '-' + dd ;
 
           updateUsuario(usuarioB[0]);
 
-          const importeM1 = +reportes[step].importe;
+          const importeM1 = -reportes[step].importe;
           const usuarioM1 = usuarioB[0].usuario;
           const importeCAM1 = usuarioB[0].balanceca;
 
@@ -224,7 +220,7 @@ today = yyyy + '-' + mm + '-' + dd ;
 
           updateUsuario(usuarioA[0]);
 
-          const importeM = -reportes[step].importe;
+          const importeM = +reportes[step].importe;
           const usuarioM = usuarioA[0].usuario;
           const importeCAM = usuarioA[0].balanceca;
 
@@ -241,39 +237,24 @@ today = yyyy + '-' + mm + '-' + dd ;
 
           reportes[step].pagado = "1";
           updateComercio(reportes[step]);
-        } else if (usuarioB === 201 && usuarioA !== 201) {
-          
-            usuarioB.then((valueE) => {
-              const account_origen = valueE[0].cbu;
-              const account_destino = usuarioA.cbu;
-              const amount = reportes[step].importe;
+        } else if (usuarioB !== 201 && usuarioA === 201) {
+          console.log("Externa");
+          console.log("DAtos", usuarioB.cuit, usuarioB.cuit);
 
-              tExterna(account_origen, account_destino, amount);
+          const account_origen = usuarioB[0].cuit;
+          if (usuarioA[0].cuit == 30711048579) {
+            var account_destino = 79151151;
+          } else {
+            account_destino = usuarioA[0].cuit;
+          }
+          const amount = reportes[step].importe;
 
-              const numerico = parseFloat(amount);
-              valueE[0].balanceca = numerico - parseFloat(valueE[0].balanceca);
-
-              const importeCA = valueE[0].balanceca;
-              const importeCC = valueE[0].balancecc;
-              updateUsuario(valueE[0]).then((valueE) => {});
-              const tipomovimientoC =
-                "Pago a comercios - " + reportes[step].descripcion;
-              GeneroMovimiento(
-                valueE[0].usuario,
-                tipomovimientoC,
-                numerico,
-                importeCA,
-                importeCC
-              );
-              swal(" ", "PAGOS REALIZADOS CON ÉXITO", "success");
-            });
-          
+          tExterna(account_origen, account_destino, amount, "", "comercio");
         }
       } else {
         console.log("Hay errores en algunos campos");
       }
     }
-    swal(" ", "Pagos a Comercios Efectuados", "success");
   };
 
   const Dau = () => {
@@ -288,12 +269,11 @@ today = yyyy + '-' + mm + '-' + dd ;
     const reportes = await getEmpresa();
     const cantidad = reportes.length;
 
-var today = new Date();
-var dd = String(today.getDate()).padStart(2, '0');
-var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-var yyyy = String(today.getFullYear());
-today = yyyy + '-' + mm + '-' + dd ;
-
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = String(today.getFullYear());
+    today = yyyy + "-" + mm + "-" + dd;
 
     for (let step = 0; step < cantidad; step++) {
       await sleep(5000);
@@ -302,7 +282,7 @@ today = yyyy + '-' + mm + '-' + dd ;
       if (
         reportes[step].estado !== "Pago total" &&
         reportes[step].estado !== "Pago parcial" &&
-        reportes[step].debito == "1" 
+        reportes[step].debito == "1"
       ) {
         let usuarioB = await getUsuarioCuit(reportes[step].cuitEmpresa);
         let usuarioA = await getUsuarioCuit(reportes[step].cuit);
@@ -362,7 +342,7 @@ today = yyyy + '-' + mm + '-' + dd ;
 
           reportes[step].estado = "Pago total";
           updateEmpresaM(reportes[step]);
-        } else if(usuarioB === 201 && usuarioA !== 201){
+        } else if (usuarioB === 201 && usuarioA !== 201) {
           usuarioB.then((valueE) => {
             const account_origen = valueE[0].cbu;
             const account_destino = usuarioA.cbu;
@@ -388,7 +368,7 @@ today = yyyy + '-' + mm + '-' + dd ;
             swal(" ", "DÉBITOS REALIZADOS CON ÉXITO", "success");
           });
         }
-      }  else {
+      } else {
         console.log("Hay errores en algunos campos");
       }
     }
