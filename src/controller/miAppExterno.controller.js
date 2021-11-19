@@ -44,11 +44,11 @@ export const tExterna = async function (
       if (body.toString() == '{"transfer_success":"Transferencia exitosa"}') {
         getUsuarioUsuario(window.localStorage.getItem("name")).then(
           (valueE) => {
-            const numerico = parseFloat(amount);
-            if (tipoCuenta === "CC") {
-              valueE[0].balanceca = parseFloat(valueE[0].balanceca) - numerico;
+            const numerico = -parseFloat(amount);
+            if (tipoCuenta === "CA") {
+              valueE[0].balanceca = parseFloat(valueE[0].balanceca) + numerico;
             } else if (tipoCuenta === "CC") {
-              valueE[0].balancecc = parseFloat(valueE[0].balancecc) - numerico;
+              valueE[0].balancecc = parseFloat(valueE[0].balancecc) + numerico;
             }
 
             const importeCA = valueE[0].balanceca;
