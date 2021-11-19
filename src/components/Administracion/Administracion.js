@@ -11,7 +11,7 @@ import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router";
 import swal from "sweetalert";
-import { tExterna } from "../../controller/miAppExterno.controller";
+import { tExterna, gcuenta } from "../../controller/miAppExterno.controller";
 
 //importo
 import {
@@ -238,18 +238,14 @@ export default function Encuesta(props) {
           reportes[step].pagado = "1";
           updateComercio(reportes[step]);
         } else if (usuarioB !== 201 && usuarioA === 201) {
-          console.log("Externa");
-          console.log("DAtos", usuarioB.cuit, usuarioB.cuit);
+          var account_destino = reportes[step].cuit;
+          var amount = reportes[step].importe;
+          var account_origen = reportes[step].cuitEmpresa;
+          reportes[step].pagado = "1";
+          updateComercio(reportes[step]);
+          gcuenta(account_origen, account_destino, amount, "", "comercio");
 
-          const account_origen = usuarioB[0].cuit;
-          if (usuarioA[0].cuit == 30711048579) {
-            var account_destino = 79151151;
-          } else {
-            account_destino = usuarioA[0].cuit;
-          }
-          const amount = reportes[step].importe;
 
-          tExterna(account_origen, account_destino, amount, "", "comercio");
         }
       } else {
         console.log("Hay errores en algunos campos");
